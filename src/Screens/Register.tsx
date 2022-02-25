@@ -8,7 +8,7 @@ import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
 import AppInputLabel from '../Components/AppInputLabel';
 import {navigate} from '../Navigation/NavigationUtils';
 import {useAppDispatch} from '../State/hooks';
-import {register, RegisterParams} from '../State/Features/meSlice';
+import {register, RegisterParams} from '../State/Features/me/meSlice';
 import {Formik} from 'formik';
 import AppErrorText from '../Components/AppErrorText';
 
@@ -65,6 +65,7 @@ const Login = () => {
           return (
             <>
               <AppInputLabel
+                labelColor="black"
                 label="Email"
                 value={values.email}
                 onChange={handleChange('email')}
@@ -72,9 +73,10 @@ const Login = () => {
                 error={errors.email !== ''}
               />
               {errors.email && touched.email && (
-                <AppErrorText error={errors.email} />
+                <AppErrorText color="red" error={errors.email} />
               )}
               <AppInputLabel
+                labelColor="black"
                 label="Password"
                 value={values.password}
                 onChange={handleChange('password')}
@@ -82,9 +84,10 @@ const Login = () => {
                 error={errors.password !== ''}
               />
               {errors.password && touched.password && (
-                <AppErrorText error={errors.password} />
+                <AppErrorText color="red" error={errors.password} />
               )}
               <AppInputLabel
+                labelColor="black"
                 label="Confirm Password"
                 value={values.confirmPassword}
                 onChange={handleChange('confirmPassword')}
@@ -92,7 +95,7 @@ const Login = () => {
                 error={errors.confirmPassword !== ''}
               />
               {errors.confirmPassword && touched.confirmPassword && (
-                <AppErrorText error={errors.confirmPassword} />
+                <AppErrorText color="red" error={errors.confirmPassword} />
               )}
               <Text onPress={() => gotoLogin()} style={styles.toLogin}>
                 Already have an account?

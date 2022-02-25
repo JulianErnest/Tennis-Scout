@@ -5,6 +5,7 @@ import React from 'react';
 import {Colors} from '../Styles/GlobalStyles';
 
 type AppInputLabelProps = {
+  labelColor: string;
   label: string;
   placeholder: string;
   value: string;
@@ -16,7 +17,7 @@ const AppInputLabel = (props: AppInputLabelProps) => {
   const {value, onChange, error} = props;
   return (
     <View>
-      <Text>{props.label}</Text>
+      <Text style={{color: props.labelColor}}>{props.label}</Text>
       <TextInput
         error={error}
         placeholder={props.placeholder}
@@ -34,8 +35,8 @@ export default AppInputLabel;
 const styles = StyleSheet.create({
   textInput: {
     width: 270,
-    marginVertical: 30,
-    height: 50,
+    marginVertical: 20,
+    height: 38,
     borderWidth: 0.3,
     borderColor: Colors.primary,
   },

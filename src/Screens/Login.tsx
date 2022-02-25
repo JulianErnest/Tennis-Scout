@@ -6,7 +6,7 @@ import Toast from 'react-native-toast-message';
 import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
 import AppInputLabel from '../Components/AppInputLabel';
 import {navigate} from '../Navigation/NavigationUtils';
-import {login} from '../State/Features/meSlice';
+import {login} from '../State/Features/me/meSlice';
 import {useAppDispatch} from '../State/hooks';
 
 const Login = () => {
@@ -32,8 +32,8 @@ const Login = () => {
         text1: e as string,
         visibilityTime: 3000,
       });
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
