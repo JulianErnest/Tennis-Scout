@@ -37,6 +37,8 @@ export type LoggedInCoach = {
   currentStartDate: string;
   currentGender: string;
   previousPlayers: PreviousPlayers[];
+  lastOpponentLastName: string;
+  lastOpponentTournament: string;
 };
 
 export type UserType = 'admin' | 'coach' | '';
@@ -234,5 +236,7 @@ export const selectIsProfileCreated = (state: RootState) =>
   state.meReducer.profileCreated;
 export const selectFetchingUser = (state: RootState) =>
   state.meReducer.fetchingUser;
+export const selectUserDetails = (state: RootState) =>
+  state.meReducer.currentUser;
 
 export default meSlice.reducer;

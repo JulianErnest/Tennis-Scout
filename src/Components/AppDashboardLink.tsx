@@ -8,13 +8,19 @@ type AppDashboardLinkProps = {
   icon: string;
   label: string;
   route: string;
+  navprops: {};
 };
 
-const AppDashboardLink = ({icon, label, route}: AppDashboardLinkProps) => {
+const AppDashboardLink = ({
+  icon,
+  label,
+  route,
+  navprops,
+}: AppDashboardLinkProps) => {
   return (
     <View style={styles.mainContainer}>
       <TouchableOpacity
-        onPress={() => navigate(route, {})}
+        onPress={() => navigate(route, navprops)}
         style={styles.container}>
         <Icon style={styles.icon} name={icon} />
       </TouchableOpacity>

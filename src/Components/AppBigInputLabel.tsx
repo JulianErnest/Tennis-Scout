@@ -11,7 +11,6 @@ type AppInputLabelProps = {
   value: string;
   error: boolean;
   onChange: (text: string) => void;
-  height: number;
 };
 
 const AppInputLabel = (props: AppInputLabelProps) => {
@@ -20,10 +19,9 @@ const AppInputLabel = (props: AppInputLabelProps) => {
     <View>
       <Text style={{color: props.labelColor}}>{props.label}</Text>
       <TextInput
-        multiline
         error={error}
         placeholder={props.placeholder}
-        style={[styles.textInput, {height: props.height}]}
+        style={styles.textInput}
         onChangeText={text => onChange(text)}
         theme={{colors: {primary: Colors.primary}}}
         value={value}
@@ -38,6 +36,7 @@ const styles = StyleSheet.create({
   textInput: {
     width: 270,
     marginVertical: 20,
+    height: 50,
     borderWidth: 0.3,
     borderColor: Colors.primary,
   },

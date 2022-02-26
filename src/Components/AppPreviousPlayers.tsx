@@ -58,6 +58,7 @@ const AppPreviousPlayers = ({
                 <Field name="firstName">
                   {({field}: any) => (
                     <AppInputLabel
+                      height={38}
                       labelColor="white"
                       label="First Name"
                       value={field.value}
@@ -73,6 +74,7 @@ const AppPreviousPlayers = ({
                 <Field name="lastName">
                   {({field}: any) => (
                     <AppInputLabel
+                      height={38}
                       labelColor="white"
                       label="Last Name"
                       value={field.value}

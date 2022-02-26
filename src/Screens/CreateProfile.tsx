@@ -94,6 +94,7 @@ const CreateProfile = () => {
               <>
                 <Text style={styles.bigText}>Your Information</Text>
                 <AppInputLabel
+                  height={38}
                   labelColor="white"
                   label="First Name"
                   value={values.coachFirstName}
@@ -105,6 +106,7 @@ const CreateProfile = () => {
                   <AppErrorText color="white" error={errors.coachFirstName} />
                 )}
                 <AppInputLabel
+                  height={38}
                   labelColor="white"
                   label="Last Name"
                   value={values.coachLastName}
@@ -117,6 +119,7 @@ const CreateProfile = () => {
                 )}
                 <Text style={styles.bigText}>Current Player</Text>
                 <AppInputLabel
+                  height={38}
                   labelColor="white"
                   label="First Name"
                   value={values.currentFirstName}
@@ -128,6 +131,7 @@ const CreateProfile = () => {
                   <AppErrorText color="white" error={errors.currentFirstName} />
                 )}
                 <AppInputLabel
+                  height={38}
                   labelColor="white"
                   label="Last Name"
                   value={values.currentLastName}
