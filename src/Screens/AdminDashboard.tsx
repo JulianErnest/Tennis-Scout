@@ -6,16 +6,23 @@ import AppDashboardLink from '../Components/AppDashboardLink';
 const AdminDashboard = () => {
   return (
     <View style={GlobalStyles.centerView}>
-      <AppDashboardLink route="AllCoaches" icon="users" label="All Coaches" />
+      <AppDashboardLink
+        route="CoachDetails"
+        icon="users"
+        label="All Coaches"
+        navprops={{}}
+      />
       <AppDashboardLink
         route="PendingApplications"
         icon="user-plus"
         label="Pending Applications"
+        navprops={{}}
       />
       <AppDashboardLink
-        route="AllMatches"
+        route="MatchDetails"
         icon="file-text"
         label="All Matches"
+        navprops={{}}
       />
     </View>
   );

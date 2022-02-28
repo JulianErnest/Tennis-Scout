@@ -8,17 +8,19 @@ import {selectUserDetails} from '../State/Features/me/meSlice';
 import AppDashboardLink from '../Components/AppDashboardLink';
 import {
   fetchMatchNotes,
-  selectCoachMatchNotes,
+  selectMatchNotes,
 } from '../State/Features/match/matchSlice';
+import {setAccountDetails} from '../State/Features/account/accountSlice';
 
 const CoachDashboard = () => {
   const dispatch = useAppDispatch();
   const userDetails = useAppSelector(selectUserDetails);
   const uid = auth().currentUser?.uid;
-  const matchNotes = useAppSelector(selectCoachMatchNotes);
+  const matchNotes = useAppSelector(selectMatchNotes);
   useEffect(() => {
     dispatch(fetchMatchNotes(uid as string));
-  }, [dispatch, uid]);
+    dispatch(setAccountDetails(userDetails));
+  }, [dispatch, uid, userDetails]);
   return (
     <View style={[GlobalStyles.centerView]}>
       <Text style={styles.coachNameAndPlayer}>
@@ -35,11 +37,13 @@ const CoachDashboard = () => {
         </View>
         <View style={styles.column}>
           <Text style={styles.lightText}>Last Entry</Text>
-          <Text style={styles.versusName}>
-            vs {userDetails.lastOpponentLastName}
-          </Text>
+          {userDetails.lastOpponentLastName !== '' && (
+            <Text style={styles.versusName}>
+              {`vs ${userDetails.lastOpponentLastName}`}
+            </Text>
+          )}
           <Text style={styles.versusTournament}>
-            {userDetails.lastOpponentTournament}
+            {userDetails.lastOpponentTournament ?? ''}
           </Text>
         </View>
       </View>

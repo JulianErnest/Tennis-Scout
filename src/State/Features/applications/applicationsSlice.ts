@@ -55,13 +55,15 @@ const applicationsSlice = createSlice({
     setApplications(state, {payload}) {
       state.applications = payload;
     },
+    resetApplications(state) {
+      Object.assign(state, initialState);
+    },
   },
-  extraReducers: builder => {},
 });
 
 export default applicationsSlice.reducer;
 
-export const {setApplications} = applicationsSlice.actions;
+export const {setApplications, resetApplications} = applicationsSlice.actions;
 
 export const selectApplications = (state: RootState) =>
   state.applicationsReducer.applications;

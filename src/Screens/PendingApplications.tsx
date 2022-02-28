@@ -19,13 +19,14 @@ const PendingApplications = () => {
   const applications = useAppSelector(selectApplications);
   useEffect(() => {
     (() => {
-      db()
+      const subscription = db()
         .collection('Applications')
         .onSnapshot(snapshot => {
           let docs: Application[] = [];
           snapshot.forEach(doc => docs.push(doc.data() as Application));
           dispatch(setApplications(docs));
         });
+      return subscription;
     })();
   }, [dispatch]);
 

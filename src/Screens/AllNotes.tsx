@@ -5,10 +5,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import auth from '@react-native-firebase/auth';
 
 import {useAppDispatch, useAppSelector} from '../State/hooks';
-import {
-  selectCoachMatchNotes,
-  setCoachMatches,
-} from '../State/Features/match/matchSlice';
+import {selectMatchNotes, setMatches} from '../State/Features/match/matchSlice';
 import {Colors} from '../Styles/GlobalStyles';
 import {MatchDetails} from '../State/Features/match/MatchTypes';
 import {getFormattedDate} from '../Helpers/DateFunctions';
@@ -16,7 +13,7 @@ import {navigate} from '../Navigation/NavigationUtils';
 
 const AllNotes = ({route}: any) => {
   const dispatch = useAppDispatch();
-  const matchNotes = useAppSelector(selectCoachMatchNotes);
+  const matchNotes = useAppSelector(selectMatchNotes);
   useEffect(() => {
     console.log(route.params);
     const uid = route.params?.coachId ?? auth().currentUser?.uid;
@@ -28,7 +25,7 @@ const AllNotes = ({route}: any) => {
         data.docs.forEach(x =>
           notes.push({...x.data(), matchId: x.id} as MatchDetails),
         );
-        dispatch(setCoachMatches(notes));
+        dispatch(setMatches(notes));
       });
     return subscription;
   }, [dispatch, route.params]);

@@ -6,6 +6,8 @@ export type OpponentArea = {
 export type NetFrequency = 'Rarely' | 'Sometimes' | 'Always';
 
 export type FormValues = {
+  playerFirstName: string;
+  playerLastName: string;
   opponentFirstName: string;
   opponentLastName: string;
   tournamentName: string;
@@ -25,6 +27,8 @@ export type MatchDetails = FormValues & {
   dateCreated: number;
   matchId: string;
   coachId: string;
+  coachFirstName: string;
+  coachLastName: string;
 };
 
 export type InitialState = {

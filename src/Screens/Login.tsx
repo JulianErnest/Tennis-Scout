@@ -45,6 +45,8 @@ const Login = () => {
         value={email}
         onChange={text => setEmail(text)}
         placeholder=""
+        labelColor={'black'}
+        height={40}
       />
       <AppInputLabel
         error={hasError}
@@ -52,6 +54,8 @@ const Login = () => {
         value={password}
         onChange={text => setPassword(text)}
         placeholder=""
+        labelColor={'black'}
+        height={40}
       />
       <Button
         loading={loading}

@@ -7,14 +7,19 @@ import {FormValues, InitialState, MatchDetails} from './MatchTypes';
 
 export const submitMatchNotes = createAsyncThunk(
   'match/submit',
-  async (params: FormValues) => {
+  async (params: FormValues, thunkApi) => {
     try {
+      const state = thunkApi.getState() as RootState;
       await db()
         .collection('Matches')
         .add({
           ...params,
+          playerFirstName: state.meReducer.currentUser.currentFirstName,
+          playerLastName: state.meReducer.currentUser.currentLastName,
           dateCreated: Date.now(),
           coachId: auth().currentUser?.uid,
+          coachFirstName: state.meReducer.currentUser.coachFirstName,
+          coachLastName: state.meReducer.currentUser.coachLastName,
         });
       await db().collection('Coaches').doc(auth().currentUser?.uid).update({
         lastOpponentLastName: params.opponentLastName,
@@ -82,7 +87,7 @@ export const matchSlice = createSlice({
     setEnableScroll(state, {payload}) {
       state.enableScroll = payload;
     },
-    setCoachMatches(state, {payload}: {payload: MatchDetails[]}) {
+    setMatches(state, {payload}: {payload: MatchDetails[]}) {
       if (!state.hasFetchedNotes) {
         state.hasFetchedNotes = true;
       }
@@ -99,6 +104,17 @@ export const matchSlice = createSlice({
           x.opponentLastName.toUpperCase().includes(payload.toUpperCase()),
       );
     },
+    setAdminMatches(state, {payload}: {payload: MatchDetails[]}) {
+      if (!state.hasFetchedNotes) {
+        state.hasFetchedNotes = true;
+      }
+      state.matchNotes = payload.sort(
+        (a, b) => a.dateCreated - b.dateCreated,
+      ) as MatchDetails[];
+    },
+    resetMatch(state) {
+      Object.assign(state, initialState);
+    },
   },
   extraReducers: builder => {
     builder.addCase(fetchMatchNotes.fulfilled, (state, {payload}) => {
@@ -112,14 +128,19 @@ export const matchSlice = createSlice({
   },
 });
 
-export const {setEnableScroll, setCoachMatches, setFilteredNotes} =
-  matchSlice.actions;
+export const {
+  setEnableScroll,
+  setMatches,
+  setFilteredNotes,
+  resetMatch,
+  setAdminMatches,
+} = matchSlice.actions;
 
 export default matchSlice.reducer;
 
 export const selectEnableScroll = (state: RootState) =>
   state.matchReducer.enableScroll;
-export const selectCoachMatchNotes = (state: RootState) =>
+export const selectMatchNotes = (state: RootState) =>
   state.matchReducer.matchNotes;
 export const selectFilteredNotes = (state: RootState) =>
   state.matchReducer.filteredNotes;

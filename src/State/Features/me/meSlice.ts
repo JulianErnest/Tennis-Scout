@@ -124,6 +124,7 @@ export const checkUser = createAsyncThunk('meSlice/checkUser', async () => {
 export const getLoggedInUser = createAsyncThunk(
   'meSlice/getLoggedInUser',
   async (uid: string) => {
+    console.log('Was called here, delete me later meSlice 127');
     try {
       const doc = await firestore().collection('Coaches').doc(uid).get();
       if (doc.exists) {
@@ -189,6 +190,8 @@ const initialState: InitialState = {
     currentStartDate: '',
     currentGender: '',
     previousPlayers: [],
+    lastOpponentLastName: '',
+    lastOpponentTournament: '',
   },
 };
 
@@ -202,17 +205,23 @@ export const meSlice = createSlice({
     setShowCreateProfile(state, {payload}) {
       state.profileCreated = payload;
     },
+    resetMe(state) {
+      Object.assign(state, initialState);
+    },
   },
   extraReducers: builder => {
     builder.addCase(login.fulfilled, (state, {payload}) => {
+      console.log('Login fulfilled payload', payload);
       if (payload?.type === 'coach') {
         state.profileCreated = payload.profileCreated;
       }
       setUserType(payload?.type);
       state.userType = payload?.type;
       state.loggingIn = false;
+      Object.assign(state.currentUser, payload);
     });
     builder.addCase(checkUser.fulfilled, (state, {payload}) => {
+      console.log(payload);
       state.userType = payload as UserType;
     });
     builder.addCase(createProfile.fulfilled, (state, {payload}) => {
@@ -228,7 +237,7 @@ export const meSlice = createSlice({
   },
 });
 
-export const {setFetchingUser} = meSlice.actions;
+export const {setFetchingUser, resetMe} = meSlice.actions;
 
 export const selectLoggingIn = (state: RootState) => state.meReducer.loggingIn;
 export const selectUserType = (state: RootState) => state.meReducer.userType;
