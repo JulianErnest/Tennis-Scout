@@ -20,8 +20,8 @@ export type LoginParams = {
 export type PreviousPlayers = {
   firstName: string;
   lastName: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: number;
+  endDate: number;
   gender: string;
 };
 
@@ -105,6 +105,9 @@ export const login = createAsyncThunk(
       if (err.code === 'auth/user-not-found') {
         return thunkApi.rejectWithValue('Account does not exist');
       }
+      if (err.code === 'auth/wrong-password') {
+        return thunkApi.rejectWithValue('Invalid password');
+      }
       return thunkApi.rejectWithValue(
         'Unable to log-in at the moment, try again later.',
       );
@@ -123,7 +126,7 @@ export const checkUser = createAsyncThunk('meSlice/checkUser', async () => {
 
 export const getLoggedInUser = createAsyncThunk(
   'meSlice/getLoggedInUser',
-  async (uid: string) => {
+  async (uid: string, thunkApi) => {
     console.log('Was called here, delete me later meSlice 127');
     try {
       const doc = await firestore().collection('Coaches').doc(uid).get();
@@ -132,6 +135,7 @@ export const getLoggedInUser = createAsyncThunk(
       }
     } catch (e) {
       console.log('Error get logged in user meSlice', e);
+      return thunkApi.rejectWithValue({err: e});
     }
   },
 );
@@ -169,7 +173,7 @@ type InitialState = {
   loggingIn: boolean;
   userType: UserType;
   fetchingUser: boolean;
-  profileCreated: false;
+  profileCreated: boolean;
   currentUser: LoggedInCoach;
 };
 
@@ -226,6 +230,7 @@ export const meSlice = createSlice({
     });
     builder.addCase(createProfile.fulfilled, (state, {payload}) => {
       console.log('Create profile success payload meslice', payload);
+      state.profileCreated = true;
       state.currentUser = payload as LoggedInCoach;
     });
     builder.addCase(getLoggedInUser.fulfilled, (state, {payload}) => {

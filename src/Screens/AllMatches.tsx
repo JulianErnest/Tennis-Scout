@@ -46,8 +46,9 @@ const AllMatches = () => {
     }
     if (granted) {
       const fileName = `${Date.now()}.csv`;
-      const androidPath = `${rnfs.DocumentDirectoryPath}/${fileName}`;
+      const androidPath = `${rnfs.DownloadDirectoryPath}${fileName}`;
       const iosPath = `${rnfs.DocumentDirectoryPath}${fileName}`;
+      console.log(androidPath);
       console.log(iosPath);
       const headerString =
         "Coach Name,Coach's player,Opponent,Match Date,Tournament,Match Round,General Notes,Serve Rating,Serve Notes,Forehand Rating,Forehand Notes,Backhand Rating,Backhand Notes,Movement Rating,Movement Notes,Come to the net?,Volley Rating,Volley Notes,Players comments about opponent\n";
@@ -68,7 +69,6 @@ const AllMatches = () => {
         )
         .join('');
       const csvString = `${headerString}${valuesString}`;
-      console.log(csvString);
       try {
         if (Platform.OS === 'android') {
           await rnfs.writeFile(androidPath, csvString, 'utf8');
@@ -103,6 +103,7 @@ const AllMatches = () => {
         Download All
       </Button>
       <FlatList
+        contentContainerStyle={styles.flatListContainer}
         style={styles.flatList}
         data={allMatches}
         renderItem={({item, index}) => (
@@ -158,10 +159,15 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     marginVertical: 5,
   },
+  flatListContainer: {
+    alignItems: 'center',
+  },
   infoContainer: {
     flexDirection: 'row',
   },
-  flatList: {},
+  flatList: {
+    width: "100%",
+  },
   label: {
     marginVertical: 5,
   },

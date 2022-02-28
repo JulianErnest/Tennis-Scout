@@ -13,13 +13,18 @@ const Splashscreen = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     (async () => {
-      const uid = auth().currentUser?.uid ?? '';
-      if (uid && uid !== 'dZf0mHnlbAPP1nYENilCmPW0U2C3') {
-        await dispatch(getLoggedInUser(uid));
+      try {
+        const uid = auth().currentUser?.uid ?? '';
+        if (uid && uid !== 'dZf0mHnlbAPP1nYENilCmPW0U2C3') {
+          await dispatch(getLoggedInUser(uid));
+        }
+        await dispatch(checkUser());
+      } catch (error) {
+        console.log('Error fetching user', error)
+      } finally {
+        SplashScreen.hide(); 
+        dispatch(setFetchingUser(false));
       }
-      await dispatch(checkUser());
-      SplashScreen.hide();
-      dispatch(setFetchingUser(false));
     })();
   }, [dispatch]);
 

@@ -7,13 +7,13 @@ import AdminNavigation from './AdminNavigation';
 import UnauthenticatedNavigation from './UnauthenticatedNavigation';
 import Splashscreen from '../Screens/Splashscreen';
 import CoachNavigation from './CoachNavigation';
+import SplashScreen from 'react-native-splash-screen';
 
 const MainNavigator = () => {
   const userType = useAppSelector(selectUserType);
   const fetchingUser = useAppSelector(selectFetchingUser);
-  console.log(fetchingUser);
-  console.log('Current user line 13 main navigator.tsx', auth().currentUser);
-  console.log(userType);
+  console.log('Current user', auth().currentUser)
+  console.log('userType', userType)
   if (fetchingUser) {
     return <Splashscreen />;
   }

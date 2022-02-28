@@ -62,8 +62,8 @@ const CreateProfile = () => {
     const playerObject: PreviousPlayers = {
       firstName: '',
       lastName: '',
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: 0,
+      endDate: 0,
       gender: '',
     };
     const previousPlayers = [...values.previousPlayers];

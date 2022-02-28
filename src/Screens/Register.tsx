@@ -71,6 +71,7 @@ const Login = () => {
                 onChange={handleChange('email')}
                 placeholder=""
                 error={errors.email !== ''}
+                height={40}
               />
               {errors.email && touched.email && (
                 <AppErrorText color="red" error={errors.email} />
@@ -82,6 +83,7 @@ const Login = () => {
                 onChange={handleChange('password')}
                 placeholder=""
                 error={errors.password !== ''}
+                height={40}
               />
               {errors.password && touched.password && (
                 <AppErrorText color="red" error={errors.password} />
@@ -93,6 +95,7 @@ const Login = () => {
                 onChange={handleChange('confirmPassword')}
                 placeholder=""
                 error={errors.confirmPassword !== ''}
+                height={40}
               />
               {errors.confirmPassword && touched.confirmPassword && (
                 <AppErrorText color="red" error={errors.confirmPassword} />

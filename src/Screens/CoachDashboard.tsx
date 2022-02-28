@@ -31,20 +31,24 @@ const CoachDashboard = () => {
         {userDetails.currentLastName}
       </Text>
       <View style={[styles.row, styles.headerInfo]}>
-        <View style={styles.column}>
+        <View style={[styles.column, styles.headerInfoContainer]}>
           <Text style={styles.lightText}>Number of opponent notes entered</Text>
           <Text style={styles.number}>{matchNotes.length}</Text>
         </View>
-        <View style={styles.column}>
+        <View style={[styles.column, styles.headerInfoContainer]}>
           <Text style={styles.lightText}>Last Entry</Text>
-          {userDetails.lastOpponentLastName !== '' && (
-            <Text style={styles.versusName}>
-              {`vs ${userDetails.lastOpponentLastName}`}
-            </Text>
+          {matchNotes.length === 0 ? (
+            <Text style={styles.versusName}>No entry yet</Text>
+          ) : (
+            <>
+              <Text style={styles.versusName}>
+                {`vs ${userDetails.lastOpponentLastName}`}
+              </Text>
+              <Text style={styles.versusTournament}>
+                {userDetails.lastOpponentTournament ?? ''}
+              </Text>
+            </>
           )}
-          <Text style={styles.versusTournament}>
-            {userDetails.lastOpponentTournament ?? ''}
-          </Text>
         </View>
       </View>
       <View style={styles.row}>
@@ -98,13 +102,15 @@ const styles = StyleSheet.create({
   },
   column: {
     flexBasis: '50%',
+    justifyContent: 'flex-start',
   },
   headerInfo: {
     marginLeft: 15,
     marginTop: 30,
   },
   lightText: {
-    fontWeight: '200',
+    fontWeight: '400',
+    color: 'black',
   },
   number: {
     fontSize: 30,
@@ -112,7 +118,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   row: {
-    marginVertical: 20,
+    marginVertical: 5,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -126,5 +132,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 23,
     color: Colors.primary,
+  },
+  headerInfoContainer: {
+    height: 50,
+    marginBottom: 20,
   },
 });

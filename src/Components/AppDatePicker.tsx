@@ -25,7 +25,11 @@ const AppDatePicker = (props: AppDatePickerProps) => {
           mode="date"
           open={seen}
           date={props.date}
-          onConfirm={selectedDate => setDate(selectedDate)}
+          onConfirm={selectedDate => {
+            console.log(selectedDate)
+            setSeen(false);
+            setDate(selectedDate);
+          }}
           onCancel={() => setSeen(false)}
         />
       )}

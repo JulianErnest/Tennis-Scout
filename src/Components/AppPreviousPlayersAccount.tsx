@@ -19,7 +19,7 @@ type AppPreviousPlayersProps = {
   touched: any;
 };
 
-const AppPreviousPlayers = ({
+const AppPreviousPlayersAccount = ({
   values,
   setValues,
   handleChange,
@@ -50,7 +50,7 @@ const AppPreviousPlayers = ({
                 <Icon
                   style={styles.removeIcon}
                   name="x"
-                  color="white"
+                  color="black"
                   size={30}
                   onPress={() => removePreviousPlayer(i)}
                 />
@@ -59,7 +59,7 @@ const AppPreviousPlayers = ({
                   {({field}: any) => (
                     <AppInputLabel
                       height={38}
-                      labelColor="white"
+                      labelColor="black"
                       label="First Name"
                       value={field.value}
                       onChange={handleChange(`previousPlayers.${i}.firstName`)}
@@ -69,13 +69,13 @@ const AppPreviousPlayers = ({
                   )}
                 </Field>
                 {err && err.firstName && touch && touch.firstName && (
-                  <AppErrorText color="white" error={err.firstName} />
+                  <AppErrorText color="black" error={err.firstName} />
                 )}
                 <Field name="lastName">
                   {({field}: any) => (
                     <AppInputLabel
                       height={38}
-                      labelColor="white"
+                      labelColor="black"
                       label="Last Name"
                       value={field.value}
                       onChange={handleChange(`previousPlayers.${i}.lastName`)}
@@ -85,7 +85,7 @@ const AppPreviousPlayers = ({
                   )}
                 </Field>
                 {err && err.lastName && touch && touch.lastName && (
-                  <AppErrorText color="white" error={err.lastName} />
+                  <AppErrorText color="black" error={err.lastName} />
                 )}
                 <Field name="startDate">
                   {({}) => (
@@ -99,13 +99,13 @@ const AppPreviousPlayers = ({
                       }}
                       key={i}
                       label="Start Date"
-                      labelColor="white"
+                      labelColor="black"
                       value={player.startDate}
                     />
                   )}
                 </Field>
                 {err && err.startDate && touch && touch.startDate && (
-                  <AppErrorText color="white" error="Start Date is required" />
+                  <AppErrorText color="black" error="Start Date is required" />
                 )}
                 <Field name="endDate">
                   {({}) => (
@@ -119,13 +119,13 @@ const AppPreviousPlayers = ({
                       }}
                       key={i}
                       label="End Date"
-                      labelColor="white"
+                      labelColor="black"
                       value={player.endDate}
                     />
                   )}
                 </Field>
                 {err && err.endDate && touch && touch.endDate && (
-                  <AppErrorText color="white" error="End Date is required" />
+                  <AppErrorText color="black" error="End Date is required" />
                 )}
                 <Text style={styles.genderLabel}>Gender</Text>
                 <View style={styles.genderRow}>
@@ -134,18 +134,18 @@ const AppPreviousPlayers = ({
                       <>
                         <AppRadioButton
                           checked={player.gender === 'male'}
-                          checkedColor={Colors.dityWhite}
+                          checkedColor={Colors.primary}
                           label={'Male'}
-                          labelColor={'white'}
+                          labelColor={'black'}
                           onPress={() =>
                             setFieldValue(`previousPlayers.${i}.gender`, 'male')
                           }
                         />
                         <AppRadioButton
                           checked={player.gender === 'female'}
-                          checkedColor={Colors.dityWhite}
+                          checkedColor={Colors.primary}
                           label={'Female'}
-                          labelColor={'white'}
+                          labelColor={'black'}
                           onPress={() =>
                             setFieldValue(
                               `previousPlayers.${i}.gender`,
@@ -158,7 +158,7 @@ const AppPreviousPlayers = ({
                   </Field>
                 </View>
                 {err && err.gender && touch && touch.gender && (
-                  <AppErrorText color="white" error={err.gender} />
+                  <AppErrorText color="black" error={err.gender} />
                 )}
               </View>
             );
@@ -169,13 +169,13 @@ const AppPreviousPlayers = ({
   );
 };
 
-export default AppPreviousPlayers;
+export default AppPreviousPlayersAccount;
 
 const styles = StyleSheet.create({
   genderLabel: {
     width: 270,
     textAlign: 'left',
-    color: 'white',
+    color: 'black',
   },
   genderRow: {
     flexDirection: 'row',

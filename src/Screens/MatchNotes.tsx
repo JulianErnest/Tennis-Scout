@@ -68,7 +68,7 @@ const MatchNotes = ({route}: any) => {
   useEffect(() => {
     (async () => {
       const matchNotes = await getMatchNotes();
-      if (route.params.type) {
+      if (route.params?.type) {
         if (route.params.type !== 'edit' && matchNotes) {
           console.log(matchNotes);
           formRef.current?.setValues(matchNotes);

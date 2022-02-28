@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "231343506544",
+    "project_id": "ddsa-tennis-scout",
+    "storage_bucket": "ddsa-tennis-scout.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231343506544:android:552675458d742bdd0420b5",
+        "android_client_info": {
+          "package_name": "com.ddsa.tennisscout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "231343506544-k8old698vtv9jphcdi9vpu437pf8uj1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQHWps-3Il8cNwmz2jxRGKDlzzze-ndtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "231343506544-k8old698vtv9jphcdi9vpu437pf8uj1p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "231343506544-cp8u1669ju0dpksc31n7sn58av754eir.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ddsa.tennisscout"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

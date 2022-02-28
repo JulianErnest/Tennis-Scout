@@ -17,13 +17,13 @@ import {
 import AppDatePicker from '../Components/AppDatePicker';
 import AppErrorText from '../Components/AppErrorText';
 import AppInputLabel from '../Components/AppInputLabel';
-import AppPreviousPlayers from '../Components/AppPreviousPlayers';
 import AppRadioButton from '../Components/AppRadioButton';
 import {InitialValues} from '../State/Features/account/AccountConstants';
 import {getLoggedInUser, resetMe} from '../State/Features/me/meSlice';
 import {resetApplications} from '../State/Features/applications/applicationsSlice';
 import {resetMatch} from '../State/Features/match/matchSlice';
 import {deleteUserType} from '../Helpers/StorageFunctions';
+import AppPreviousPlayersAccount from '../Components/AppPreviousPlayersAccount';
 
 const UpdateAccount = ({route}: any) => {
   const dispatch = useAppDispatch();
@@ -262,7 +262,7 @@ const UpdateAccount = ({route}: any) => {
               )}
               <Text style={styles.bigText}>Previous Player/s</Text>
               {values.previousPlayers && (
-                <AppPreviousPlayers
+                <AppPreviousPlayersAccount
                   touched={touched}
                   values={values}
                   setValues={setValues}
