@@ -65,6 +65,7 @@ const AppPreviousPlayers = ({
                       onChange={handleChange(`previousPlayers.${i}.firstName`)}
                       placeholder=""
                       error={errors.currentFirstName !== ''}
+                      hideText={false}
                     />
                   )}
                 </Field>
@@ -81,6 +82,7 @@ const AppPreviousPlayers = ({
                       onChange={handleChange(`previousPlayers.${i}.lastName`)}
                       placeholder=""
                       error={errors.currentLastName !== ''}
+                      hideText={false}
                     />
                   )}
                 </Field>

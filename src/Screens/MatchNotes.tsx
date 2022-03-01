@@ -41,6 +41,7 @@ const MatchNotes = ({route}: any) => {
     tournamentDate: Yup.number().required('Tournament date is required'),
     netFrequency: Yup.string().required('Net frequency is required'),
   });
+
   async function handleSubmitForm(values: FormValues) {
     let sent;
     if (route.params?.type === 'edit') {
@@ -78,12 +79,17 @@ const MatchNotes = ({route}: any) => {
   useEffect(() => {
     (async () => {
       const matchNotes = await getMatchNotes();
-      if (route.params?.type) {
-        if (route.params.type !== 'edit' && matchNotes) {
-          formRef.current?.setValues(matchNotes);
+      const type = route.params?.type ?? null;
+      if (type) {
+        if (type === 'create' && !matchNotes) {
+          if (matchNotes) {
+            formRef.current.setValues(matchNotes);
+          } else {
+            formRef.current.resetForm();
+          }
         }
-        if (route.params.type === 'edit') {
-          formRef.current?.setValues(route.params);
+        if (type === 'edit') {
+          formRef.current.setValues(route.params);
         }
       }
     })();
@@ -109,6 +115,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.opponentFirstName}
                 error={false}
+                hideText={false}
               />
               <AppInputLabel
                 height={38}
@@ -118,6 +125,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.opponentLastName}
                 error={false}
+                hideText={false}
               />
               <AppInputLabel
                 height={38}
@@ -127,6 +135,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.tournamentName}
                 error={false}
+                hideText={false}
               />
               <AppDatePicker
                 date={new Date(values.tournamentDate) ?? new Date()}
@@ -172,6 +181,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.serve.notes}
                 error={false}
+                hideText={false}
               />
 
               <Text style={styles.bigText}>Forehand</Text>
@@ -193,6 +203,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.forehand.notes}
                 error={false}
+                hideText={false}
               />
 
               <Text style={styles.bigText}>Backhand</Text>
@@ -214,6 +225,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.backhand.notes}
                 error={false}
+                hideText={false}
               />
 
               <Text style={styles.bigText}>Movement</Text>
@@ -235,6 +247,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.movement.notes}
                 error={false}
+                hideText={false}
               />
 
               <Text style={styles.bigText}>Volleys</Text>
@@ -256,6 +269,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.volleys.notes}
                 error={false}
+                hideText={false}
               />
 
               <Text style={styles.bigText}>Net Play</Text>
@@ -277,6 +291,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.netPlay.notes}
                 error={false}
+                hideText={false}
               />
               <Text style={styles.bigText}>Frequency of going to net</Text>
               <View style={styles.radioContainer}>
@@ -331,6 +346,7 @@ const MatchNotes = ({route}: any) => {
                 error={false}
                 height={60}
                 onChange={handleChange('generalComments')}
+                hideText={false}
               />
               <View style={styles.radioContainer}>
                 <Text>

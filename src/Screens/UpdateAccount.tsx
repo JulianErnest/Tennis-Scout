@@ -123,6 +123,7 @@ const UpdateAccount = ({route}: any) => {
               onChange={t => setCurrPassword(t)}
               placeholder=""
               error={false}
+              hideText={true}
             />
           </>
         )}
@@ -145,6 +146,7 @@ const UpdateAccount = ({route}: any) => {
               onChange={t => setNewPassword(t)}
               placeholder=""
               error={false}
+              hideText={true}
             />
             <Button
               style={styles.button}
@@ -178,6 +180,7 @@ const UpdateAccount = ({route}: any) => {
                 onChange={() => null}
                 placeholder=""
                 error={errors.coachLastName !== ''}
+                hideText={false}
               />
               <AppInputLabel
                 height={38}
@@ -187,6 +190,7 @@ const UpdateAccount = ({route}: any) => {
                 onChange={handleChange('coachFirstName')}
                 placeholder=""
                 error={errors.coachLastName !== ''}
+                hideText={false}
               />
               {errors.coachFirstName && touched.coachFirstName && (
                 <AppErrorText color="black" error={errors.coachFirstName} />
@@ -199,6 +203,7 @@ const UpdateAccount = ({route}: any) => {
                 onChange={handleChange('coachLastName')}
                 placeholder=""
                 error={errors.coachLastName !== ''}
+                hideText={false}
               />
               {errors.coachLastName && touched.coachLastName && (
                 <AppErrorText color="black" error={errors.coachLastName} />
@@ -212,6 +217,7 @@ const UpdateAccount = ({route}: any) => {
                 onChange={handleChange('currentFirstName')}
                 placeholder=""
                 error={errors.currentFirstName !== ''}
+                hideText={false}
               />
               {errors.currentFirstName && touched.currentFirstName && (
                 <AppErrorText color="black" error={errors.currentFirstName} />
@@ -224,6 +230,7 @@ const UpdateAccount = ({route}: any) => {
                 onChange={handleChange('currentLastName')}
                 placeholder=""
                 error={errors.currentLastName !== ''}
+                hideText={false}
               />
               {errors.currentLastName && touched.currentLastName && (
                 <AppErrorText color="black" error={errors.currentLastName} />

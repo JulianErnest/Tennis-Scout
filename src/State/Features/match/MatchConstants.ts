@@ -4,7 +4,7 @@ export const initialFormValues: FormValues = {
   opponentFirstName: '',
   opponentLastName: '',
   tournamentName: '',
-  tournamentDate: 0,
+  tournamentDate: Date.now(),
   serve: {
     rating: 0,
     notes: '',

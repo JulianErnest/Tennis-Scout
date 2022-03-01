@@ -72,6 +72,7 @@ const Login = () => {
                 placeholder=""
                 error={errors.email !== ''}
                 height={40}
+                hideText={false}
               />
               {errors.email && touched.email && (
                 <AppErrorText color="red" error={errors.email} />
@@ -84,6 +85,7 @@ const Login = () => {
                 placeholder=""
                 error={errors.password !== ''}
                 height={40}
+                hideText={true}
               />
               {errors.password && touched.password && (
                 <AppErrorText color="red" error={errors.password} />
@@ -96,6 +98,7 @@ const Login = () => {
                 placeholder=""
                 error={errors.confirmPassword !== ''}
                 height={40}
+                hideText={true}
               />
               {errors.confirmPassword && touched.confirmPassword && (
                 <AppErrorText color="red" error={errors.confirmPassword} />

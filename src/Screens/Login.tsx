@@ -47,6 +47,7 @@ const Login = () => {
         placeholder=""
         labelColor={'black'}
         height={40}
+        hideText={false}
       />
       <AppInputLabel
         error={hasError}
@@ -56,6 +57,7 @@ const Login = () => {
         placeholder=""
         labelColor={'black'}
         height={40}
+        hideText={true}
       />
       <Button
         loading={loading}

@@ -101,6 +101,7 @@ const CreateProfile = () => {
                   onChange={handleChange('coachFirstName')}
                   placeholder=""
                   error={errors.coachLastName !== ''}
+                  hideText={false}
                 />
                 {errors.coachFirstName && touched.coachFirstName && (
                   <AppErrorText color="white" error={errors.coachFirstName} />
@@ -113,6 +114,7 @@ const CreateProfile = () => {
                   onChange={handleChange('coachLastName')}
                   placeholder=""
                   error={errors.coachLastName !== ''}
+                  hideText={false}
                 />
                 {errors.coachLastName && touched.coachLastName && (
                   <AppErrorText color="white" error={errors.coachLastName} />
@@ -126,6 +128,7 @@ const CreateProfile = () => {
                   onChange={handleChange('currentFirstName')}
                   placeholder=""
                   error={errors.currentFirstName !== ''}
+                  hideText={false}
                 />
                 {errors.currentFirstName && touched.currentFirstName && (
                   <AppErrorText color="white" error={errors.currentFirstName} />
@@ -138,6 +141,7 @@ const CreateProfile = () => {
                   onChange={handleChange('currentLastName')}
                   placeholder=""
                   error={errors.currentLastName !== ''}
+                  hideText={false}
                 />
                 {errors.currentLastName && touched.currentLastName && (
                   <AppErrorText color="white" error={errors.currentLastName} />
