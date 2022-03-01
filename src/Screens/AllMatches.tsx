@@ -46,7 +46,7 @@ const AllMatches = () => {
     }
     if (granted) {
       const fileName = `${Date.now()}.csv`;
-      const androidPath = `${rnfs.DownloadDirectoryPath}${fileName}`;
+      const androidPath = `${rnfs.DownloadDirectoryPath}/${fileName}`;
       const iosPath = `${rnfs.DocumentDirectoryPath}${fileName}`;
       console.log(androidPath);
       console.log(iosPath);
@@ -69,6 +69,7 @@ const AllMatches = () => {
         )
         .join('');
       const csvString = `${headerString}${valuesString}`;
+      console.log(csvString);
       try {
         if (Platform.OS === 'android') {
           await rnfs.writeFile(androidPath, csvString, 'utf8');

@@ -61,7 +61,7 @@ const AppPreviousPlayersAccount = ({
                       height={38}
                       labelColor="black"
                       label="First Name"
-                      value={field.value}
+                      value={player.firstName}
                       onChange={handleChange(`previousPlayers.${i}.firstName`)}
                       placeholder=""
                       error={errors.currentFirstName !== ''}
@@ -77,7 +77,7 @@ const AppPreviousPlayersAccount = ({
                       height={38}
                       labelColor="black"
                       label="Last Name"
-                      value={field.value}
+                      value={player.lastName}
                       onChange={handleChange(`previousPlayers.${i}.lastName`)}
                       placeholder=""
                       error={errors.currentLastName !== ''}
