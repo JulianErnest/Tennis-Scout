@@ -5,11 +5,13 @@ import AppInputLabel from '../Components/AppInputLabel';
 import {Formik} from 'formik';
 import Icon from 'react-native-vector-icons/Feather';
 import Toast from 'react-native-toast-message';
+import auth from '@react-native-firebase/auth';
 
 import {
   editMatchNotes,
   selectEnableScroll,
   submitMatchNotes,
+  fetchMatchNotes,
 } from '../State/Features/match/matchSlice';
 import {useAppDispatch, useAppSelector} from '../State/hooks';
 import AppSlider from '../Components/AppSlider';
@@ -23,12 +25,15 @@ import {
 import AppDatePicker from '../Components/AppDatePicker';
 import {FormValues, MatchDetails} from '../State/Features/match/MatchTypes';
 import {initialFormValues} from '../State/Features/match/MatchConstants';
+import {selectUserType} from '../State/Features/me/meSlice';
+import {getUserDetails} from '../State/Features/account/accountSlice';
 
 const MatchNotes = ({route}: any) => {
-  console.log(route);
   const dispatch = useAppDispatch();
   const scrollEnabled = useAppSelector(selectEnableScroll);
+  const userType = useAppSelector(selectUserType);
   const formRef = useRef<any>();
+
   const MatchNotesSchema = Yup.object().shape({
     opponentFirstName: Yup.string().required('First name is required'),
     opponentLastName: Yup.string().required('Last name is required'),
@@ -43,7 +48,13 @@ const MatchNotes = ({route}: any) => {
     } else {
       sent = await dispatch(submitMatchNotes(values)).unwrap();
     }
+    if (userType === 'coach') {
+      const uid = auth().currentUser?.uid as string;
+      await dispatch(fetchMatchNotes(uid));
+      await dispatch(getUserDetails(uid));
+    }
     formRef.current.resetForm();
+    await deleteMatchNotes();
     Toast.show({
       type: sent ? 'success' : 'error',
       text1: sent
@@ -56,7 +67,6 @@ const MatchNotes = ({route}: any) => {
 
   async function saveToLocalStorage(values: FormValues) {
     const saved = await saveMatchNotes(values);
-    saved && deleteMatchNotes();
     Toast.show({
       type: saved ? 'success' : 'error',
       text1: saved ? 'Successfully saved draft' : 'Unable to save draft',
@@ -70,7 +80,6 @@ const MatchNotes = ({route}: any) => {
       const matchNotes = await getMatchNotes();
       if (route.params?.type) {
         if (route.params.type !== 'edit' && matchNotes) {
-          console.log(matchNotes);
           formRef.current?.setValues(matchNotes);
         }
         if (route.params.type === 'edit') {

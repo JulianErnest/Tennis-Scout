@@ -2,7 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
 
-import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
+import {Colors} from '../Styles/GlobalStyles';
 import {useAppDispatch, useAppSelector} from '../State/hooks';
 import {selectUserDetails} from '../State/Features/me/meSlice';
 import AppDashboardLink from '../Components/AppDashboardLink';
@@ -22,7 +22,7 @@ const CoachDashboard = () => {
     dispatch(setAccountDetails(userDetails));
   }, [dispatch, uid, userDetails]);
   return (
-    <View style={[GlobalStyles.centerView]}>
+    <View style={styles.container}>
       <Text style={styles.coachNameAndPlayer}>
         {userDetails.coachFirstName + ' '}
         {userDetails.coachLastName + ' '}
@@ -104,9 +104,14 @@ const styles = StyleSheet.create({
     flexBasis: '50%',
     justifyContent: 'flex-start',
   },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 30,
+  },
   headerInfo: {
     marginLeft: 15,
-    marginTop: 30,
+    marginTop: 40,
   },
   lightText: {
     fontWeight: '400',
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   row: {
-    marginVertical: 5,
+    marginVertical: 9,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',

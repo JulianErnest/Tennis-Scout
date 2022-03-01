@@ -29,9 +29,9 @@ export const updateAccount = createAsyncThunk(
 
 export const getUserDetails = createAsyncThunk(
   'accountSlice/get',
-  async (params: UpdateAccountParams, thunkApi) => {
+  async (uid: string, thunkApi) => {
     try {
-      const doc = await db().collection('Coaches').doc(params.coachId).get();
+      const doc = await db().collection('Coaches').doc(uid).get();
       return doc.data();
     } catch (e) {
       console.log('Error getting account accountSlice', e);
