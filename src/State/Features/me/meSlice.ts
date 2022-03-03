@@ -1,3 +1,4 @@
+import { ADMIN } from './../../../secret';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -84,7 +85,7 @@ export const login = createAsyncThunk(
         params.password,
       );
       const {user} = signUp;
-      if (user.uid === 'dZf0mHnlbAPP1nYENilCmPW0U2C3') {
+      if (user.uid === ADMIN){
         return {type: 'admin'};
       }
       const coach = await firestore().collection('Coaches').doc(user.uid).get();
