@@ -2,17 +2,18 @@ import {Image, StyleSheet, View} from 'react-native';
 import React, {useState} from 'react';
 import {Button} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
 import AppInputLabel from '../Components/AppInputLabel';
 import {navigate} from '../Navigation/NavigationUtils';
 import {login} from '../State/Features/me/meSlice';
 import {useAppDispatch} from '../State/hooks';
+import AppErrorText from '../Components/AppErrorText';
 
 const Login = () => {
   const dispatch = useAppDispatch();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +21,7 @@ const Login = () => {
     navigate('Register', {});
   }
 
-  async function handleLogin() {
+  async function handleLogin(email: string, password: string) {
     setLoading(true);
     try {
       const response = await dispatch(login({email, password})).unwrap();
@@ -36,43 +37,68 @@ const Login = () => {
     }
   }
 
+  const values = {
+    email: '',
+    password: '',
+  };
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().required('Email should not be empty'),
+    password: Yup.string().required('Password should not be empty'),
+  });
+
   return (
     <View style={GlobalStyles.centerView}>
       <Image source={require('../Assets/logo-full.png')} style={styles.image} />
-      <AppInputLabel
-        error={hasError}
-        label="Email"
-        value={email}
-        onChange={text => setEmail(text)}
-        placeholder=""
-        labelColor={'black'}
-        height={40}
-        hideText={false}
-      />
-      <AppInputLabel
-        error={hasError}
-        label="Password"
-        value={password}
-        onChange={text => setPassword(text)}
-        placeholder=""
-        labelColor={'black'}
-        height={40}
-        hideText={true}
-      />
-      <Button
-        loading={loading}
-        onPress={() => handleLogin()}
-        style={[styles.button, styles.login]}
-        mode="contained">
-        Login
-      </Button>
-      <Button
-        onPress={() => handleRegister()}
-        labelStyle={styles.label}
-        style={[styles.button, styles.register]}
-        mode="outlined">
-        Register
-      </Button>
+      <Formik
+        initialValues={values}
+        onSubmit={values => handleLogin(values.email, values.password)}
+        validationSchema={validationSchema}>
+        {({handleChange, handleSubmit, errors, touched, values}) => (
+          <>
+            <AppInputLabel
+              height={38}
+              labelColor="black"
+              label="Email"
+              value={values.email}
+              onChange={handleChange('email')}
+              placeholder=""
+              error={false}
+              hideText={false}
+            />
+            {errors.email && touched.email && (
+              <AppErrorText color="red" error={errors.email} />
+            )}
+            <AppInputLabel
+              error={hasError}
+              label="Password"
+              onChange={handleChange('password')}
+              value={values.password}
+              placeholder=""
+              labelColor={'black'}
+              height={40}
+              hideText={true}
+            />
+            {errors.password && touched.password && (
+              <AppErrorText color="red" error={errors.password} />
+            )}
+            <Button
+              loading={loading}
+              onPress={handleSubmit}
+              style={[styles.button, styles.login]}
+              mode="contained">
+              Login
+            </Button>
+            <Button
+              onPress={() => handleRegister()}
+              labelStyle={styles.label}
+              style={[styles.button, styles.register]}
+              mode="outlined">
+              Register
+            </Button>
+          </>
+        )}
+      </Formik>
     </View>
   );
 };

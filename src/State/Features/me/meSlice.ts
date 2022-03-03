@@ -1,4 +1,3 @@
-import {ADMIN} from './../../../secret';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -6,6 +5,7 @@ import auth from '@react-native-firebase/auth';
 import {RootState} from '../../hooks';
 import {getUserType, setUserType} from '../../../Helpers/StorageFunctions';
 import {ProfileInput} from '../../../Screens/CreateProfile';
+import {ADMIN} from './../../../secret';
 
 export type RegisterParams = {
   email: string;
