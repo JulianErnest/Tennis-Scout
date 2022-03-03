@@ -26,7 +26,7 @@ import com.android.build.OutputFile
  *   // whether to bundle JS and assets in debug mode
  *   bundleInDebug: false,
  *
- *   // whether to bundle JS and assets in release mode
+ *   whether to bundle JS and assets in release mode
  *   bundleInRelease: true,
  *
  *   // whether to bundle JS and assets in another build variant (if configured).
@@ -133,6 +133,7 @@ android {
 
     defaultConfig {
         applicationId "com.ddsa.tennisscout"
+        multiDexEnabled true
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -203,7 +204,7 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-
+    implementation "androidx.multidex:multidex:2.0.1"
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
     }
