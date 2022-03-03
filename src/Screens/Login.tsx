@@ -37,7 +37,7 @@ const Login = () => {
     }
   }
 
-  const values = {
+  const fields = {
     email: '',
     password: '',
   };
@@ -51,8 +51,8 @@ const Login = () => {
     <View style={GlobalStyles.centerView}>
       <Image source={require('../Assets/logo-full.png')} style={styles.image} />
       <Formik
-        initialValues={values}
-        onSubmit={values => handleLogin(values.email, values.password)}
+        initialValues={fields}
+        onSubmit={form => handleLogin(form.email, form.password)}
         validationSchema={validationSchema}>
         {({handleChange, handleSubmit, errors, touched, values}) => (
           <>
