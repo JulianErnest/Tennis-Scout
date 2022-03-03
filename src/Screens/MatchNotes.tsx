@@ -1,5 +1,5 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import * as Yup from 'yup';
 import AppInputLabel from '../Components/AppInputLabel';
 import {Formik} from 'formik';
@@ -25,10 +25,11 @@ import {
 import AppDatePicker from '../Components/AppDatePicker';
 import {FormValues, MatchDetails} from '../State/Features/match/MatchTypes';
 import {initialFormValues} from '../State/Features/match/MatchConstants';
-import {selectUserType} from '../State/Features/me/meSlice';
+import {getLoggedInUser, selectUserType} from '../State/Features/me/meSlice';
 import {getUserDetails} from '../State/Features/account/accountSlice';
 
 const MatchNotes = ({route}: any) => {
+  const [uploading, setUploading] = useState(false);
   const dispatch = useAppDispatch();
   const scrollEnabled = useAppSelector(selectEnableScroll);
   const userType = useAppSelector(selectUserType);
@@ -43,27 +44,33 @@ const MatchNotes = ({route}: any) => {
   });
 
   async function handleSubmitForm(values: FormValues) {
-    let sent;
-    if (route.params?.type === 'edit') {
-      sent = await dispatch(editMatchNotes(values as MatchDetails)).unwrap();
-    } else {
-      sent = await dispatch(submitMatchNotes(values)).unwrap();
+    if (!uploading) {
+      setUploading(true);
+      let sent;
+      if (route.params?.type === 'edit') {
+        sent = await dispatch(editMatchNotes(values as MatchDetails)).unwrap();
+      } else {
+        sent = await dispatch(submitMatchNotes(values)).unwrap();
+      }
+      if (userType === 'coach') {
+        const uid = auth().currentUser?.uid as string;
+        console.log('test here 54 match notes');
+        await dispatch(fetchMatchNotes(uid));
+        console.log('test here 56 match notes');
+        await dispatch(getLoggedInUser(uid));
+      }
+      formRef.current.resetForm();
+      await deleteMatchNotes();
+      setUploading(false);
+      Toast.show({
+        type: sent ? 'success' : 'error',
+        text1: sent
+          ? 'Successfully saved match notes'
+          : 'Unable to save match notes, try again later.',
+        visibilityTime: 3000,
+        autoHide: true,
+      });
     }
-    if (userType === 'coach') {
-      const uid = auth().currentUser?.uid as string;
-      await dispatch(fetchMatchNotes(uid));
-      await dispatch(getUserDetails(uid));
-    }
-    formRef.current.resetForm();
-    await deleteMatchNotes();
-    Toast.show({
-      type: sent ? 'success' : 'error',
-      text1: sent
-        ? 'Successfully saved match notes'
-        : 'Unable to save match notes, try again later.',
-      visibilityTime: 3000,
-      autoHide: true,
-    });
   }
 
   async function saveToLocalStorage(values: FormValues) {
@@ -79,17 +86,15 @@ const MatchNotes = ({route}: any) => {
   useEffect(() => {
     (async () => {
       const matchNotes = await getMatchNotes();
-      const type = route.params?.type ?? null;
-      if (type) {
-        if (type === 'create' && !matchNotes) {
-          if (matchNotes) {
-            formRef.current.setValues(matchNotes);
-          } else {
-            formRef.current.resetForm();
-          }
-        }
-        if (type === 'edit') {
-          formRef.current.setValues(route.params);
+      const type = route.params?.type;
+      console.log(matchNotes);
+      if (type === 'edit') {
+        formRef.current.setValues(route.params);
+      } else {
+        if (!matchNotes) {
+          formRef.current.resetForm();
+        } else {
+          formRef.current.setValues(matchNotes);
         }
       }
     })();

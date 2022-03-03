@@ -97,7 +97,7 @@ const accountSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(getUserDetails.fulfilled, (state, {payload}) => {
-      Object.assign(state, payload);
+      Object.assign(state.userAccountDetails, payload);
     });
   },
 });
