@@ -1,4 +1,4 @@
-import { ADMIN } from './../../../secret';
+import {ADMIN} from './../../../secret';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -41,6 +41,8 @@ export type LoggedInCoach = {
   lastOpponentLastName: string;
   lastOpponentTournament: string;
 };
+
+export type SuccessfulCoachLogin = LoggedInCoach & {type: 'string'};
 
 export type UserType = 'admin' | 'coach' | '';
 
@@ -85,16 +87,16 @@ export const login = createAsyncThunk(
         params.password,
       );
       const {user} = signUp;
-      if (user.uid === ADMIN){
+      if (user.uid === ADMIN) {
         return {type: 'admin'};
       }
       const coach = await firestore().collection('Coaches').doc(user.uid).get();
       if (!coach.exists) {
         throw 'Account has not yet been approved';
       }
-      const coachData = {...coach.data()};
+      const coachData = {...coach.data(), type: 'coach'};
       coachData.type = 'coach';
-      return coachData;
+      return coachData as SuccessfulCoachLogin;
     } catch (err: any) {
       console.log(err);
       if (err === 'Account has not yet been approved') {
@@ -215,15 +217,15 @@ export const meSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(login.fulfilled, (state, {payload}) => {
+    builder.addCase(login.fulfilled, (state, {payload}: any) => {
       console.log('Login fulfilled payload', payload);
       if (payload?.type === 'coach') {
         state.profileCreated = payload.profileCreated;
       }
       setUserType(payload?.type);
-      state.userType = payload?.type;
+      state.userType = payload?.type as UserType;
       state.loggingIn = false;
-      Object.assign(state.currentUser, payload);
+      state.currentUser = payload;
     });
     builder.addCase(checkUser.fulfilled, (state, {payload}) => {
       console.log(payload);
