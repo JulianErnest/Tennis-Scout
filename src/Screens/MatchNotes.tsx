@@ -26,7 +26,6 @@ import AppDatePicker from '../Components/AppDatePicker';
 import {FormValues, MatchDetails} from '../State/Features/match/MatchTypes';
 import {initialFormValues} from '../State/Features/match/MatchConstants';
 import {getLoggedInUser, selectUserType} from '../State/Features/me/meSlice';
-import {getUserDetails} from '../State/Features/account/accountSlice';
 
 const MatchNotes = ({route}: any) => {
   const [uploading, setUploading] = useState(false);
@@ -54,9 +53,7 @@ const MatchNotes = ({route}: any) => {
       }
       if (userType === 'coach') {
         const uid = auth().currentUser?.uid as string;
-        console.log('test here 54 match notes');
         await dispatch(fetchMatchNotes(uid));
-        console.log('test here 56 match notes');
         await dispatch(getLoggedInUser(uid));
       }
       formRef.current.resetForm();
@@ -395,6 +392,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 30,
+    marginBottom: 100,
   },
   instruction: {
     fontWeight: 'bold',

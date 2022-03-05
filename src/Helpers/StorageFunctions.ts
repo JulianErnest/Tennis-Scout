@@ -38,5 +38,8 @@ export async function getMatchNotes() {
 }
 
 export async function deleteMatchNotes() {
-  await EncryptedStorage.removeItem('matchNotes');
+  const match = await getMatchNotes();
+  if (match) {
+    return await EncryptedStorage.removeItem('matchNotes');
+  }
 }

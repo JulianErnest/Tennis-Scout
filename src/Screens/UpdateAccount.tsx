@@ -33,7 +33,6 @@ const UpdateAccount = ({route}: any) => {
   const [reauthSuccess, setReauthSuccess] = useState(false);
   const formRef = useRef<any>();
   const userType = route.params?.type;
-  console.log(accountDetails);
 
   useEffect(() => {
     formRef.current.setValues(accountDetails);
@@ -45,6 +44,7 @@ const UpdateAccount = ({route}: any) => {
         ? route.params.uid
         : auth().currentUser?.uid;
     const val = await dispatch(updateAccount({...values, coachId})).unwrap();
+    dispatch(getLoggedInUser(auth().currentUser?.uid as string));
     !route.params?.type && getLoggedInUser(coachId);
     Toast.show({
       type: !val ? 'error' : 'success',

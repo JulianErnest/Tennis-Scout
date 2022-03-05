@@ -48,6 +48,7 @@ const SearchOpponent = () => {
         onChangeText={t => setFilter(t)}
       />
       <FlatList
+        style={styles.list}
         data={filtered}
         keyExtractor={data => data.dateCreated.toString()}
         renderItem={({item, index}) => (
@@ -103,6 +104,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginVertical: 4,
     marginHorizontal: 10,
+  },
+  list: {
+    marginBottom: 150,
   },
   previewContainer: {
     width: 300,
