@@ -82,8 +82,8 @@ const CoachDashboard = () => {
           <AppDashboardLink
             navprops={{coachId: uid}}
             icon={'user'}
-            label={'View All Notes'}
-            route={'Update Account'}
+            label={'Update Account'}
+            route={'UpdateAccount'}
           />
         </View>
       </View>

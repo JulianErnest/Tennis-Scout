@@ -138,7 +138,7 @@ export const getLoggedInUser = createAsyncThunk(
       }
     } catch (e) {
       console.log('Error get logged in user meSlice', e);
-      return thunkApi.rejectWithValue({err: e});
+      return thunkApi.rejectWithValue({err: 'Unable to get logged in user'});
     }
   },
 );

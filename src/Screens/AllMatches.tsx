@@ -25,9 +25,10 @@ const AllMatches = () => {
         .collection('Matches')
         .onSnapshot(snap => {
           const matches: MatchDetails[] = [];
-          snap.forEach(doc =>
-            matches.push(doc.data() as unknown as MatchDetails),
-          );
+          snap &&
+            snap.forEach(doc =>
+              matches.push(doc.data() as unknown as MatchDetails),
+            );
           dispatch(setAdminMatches(matches));
         });
       return subscription;
@@ -47,7 +48,7 @@ const AllMatches = () => {
     if (granted) {
       const fileName = `${Date.now()}.csv`;
       const androidPath = `${rnfs.DownloadDirectoryPath}/${fileName}`;
-      const iosPath = `${rnfs.DocumentDirectoryPath}${fileName}`;
+      const iosPath = `${rnfs.LibraryDirectoryPath}/${fileName}`;
       console.log(androidPath);
       console.log(iosPath);
       const headerString =
@@ -74,6 +75,7 @@ const AllMatches = () => {
         if (Platform.OS === 'android') {
           await rnfs.writeFile(androidPath, csvString, 'utf8');
         } else {
+          console.log(iosPath);
           await rnfs.writeFile(iosPath, csvString, 'utf8');
         }
         Toast.show({

@@ -21,9 +21,9 @@ const PendingApplications = () => {
     (() => {
       const subscription = db()
         .collection('Applications')
-        .onSnapshot(snapshot => {
+        .onSnapshot(snap => {
           let docs: Application[] = [];
-          snapshot.forEach(doc => docs.push(doc.data() as Application));
+          snap && snap.forEach(doc => docs.push(doc.data() as Application));
           dispatch(setApplications(docs));
         });
       return subscription;

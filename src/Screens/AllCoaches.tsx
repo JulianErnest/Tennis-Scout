@@ -17,13 +17,14 @@ const AllCoaches = () => {
   const dispatch = useAppDispatch();
   const allCoaches = useAppSelector(selectAllCoaches);
   useEffect(() => {
-    db()
+    const subscription = db()
       .collection('Coaches')
       .onSnapshot(snap => {
         const coaches: AccountDetails[] = [];
-        snap.forEach(doc => coaches.push(doc.data() as AccountDetails));
+        snap && snap.forEach(doc => coaches.push(doc.data() as AccountDetails));
         dispatch(setAllCoaches(coaches));
       });
+    return subscription;
   }, [dispatch]);
 
   function handleProfilePress(profile: AccountDetails) {

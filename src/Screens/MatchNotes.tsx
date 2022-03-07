@@ -335,7 +335,7 @@ const MatchNotes = ({route}: any) => {
                   checkedColor={Colors.primary}
                   label={'No'}
                   labelColor={'black'}
-                  onPress={() => setFieldValue('netFrequency', 'Sometimes')}
+                  onPress={() => setFieldValue('isShareable', false)}
                 />
                 <View />
               </View>
