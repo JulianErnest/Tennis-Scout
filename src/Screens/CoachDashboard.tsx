@@ -24,15 +24,16 @@ const CoachDashboard = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.coachNameAndPlayer}>
-        {userDetails.coachFirstName + ' '}
-        {userDetails.coachLastName + ' '}
-        of
-        {' ' + userDetails.currentFirstName + ' '}
+        {userDetails.coachFirstName[0] + '. '}
+        {userDetails.coachLastName + ', coach of'}
+        {' ' + userDetails.currentFirstName[0] + '. '}
         {userDetails.currentLastName}
       </Text>
       <View style={[styles.row, styles.headerInfo]}>
         <View style={[styles.column, styles.headerInfoContainer]}>
-          <Text style={styles.lightText}>Number of opponent notes entered</Text>
+          <Text style={styles.lightText}>
+            Number of opponent {'\n'} notes entered
+          </Text>
           <Text style={styles.number}>{matchNotes.length}</Text>
         </View>
         <View style={[styles.column, styles.headerInfoContainer]}>

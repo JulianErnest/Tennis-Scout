@@ -48,7 +48,7 @@ const AllMatches = () => {
     if (granted) {
       const fileName = `${Date.now()}.csv`;
       const androidPath = `${rnfs.DownloadDirectoryPath}/${fileName}`;
-      const iosPath = `${rnfs.LibraryDirectoryPath}/${fileName}`;
+      const iosPath = `${rnfs.DocumentDirectoryPath}/${fileName}`;
       console.log(androidPath);
       console.log(iosPath);
       const headerString =
