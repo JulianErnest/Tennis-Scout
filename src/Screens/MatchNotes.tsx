@@ -174,7 +174,7 @@ const MatchNotes = ({route}: any) => {
                 disabled={false}
               />
               <AppInputLabel
-                height={60}
+                height={70}
                 label="Notes"
                 labelColor="black"
                 onChange={val =>
@@ -196,7 +196,7 @@ const MatchNotes = ({route}: any) => {
                 disabled={false}
               />
               <AppInputLabel
-                height={60}
+                height={70}
                 label="Notes"
                 labelColor="black"
                 onChange={val =>
@@ -218,7 +218,7 @@ const MatchNotes = ({route}: any) => {
                 disabled={false}
               />
               <AppInputLabel
-                height={60}
+                height={70}
                 label="Notes"
                 labelColor="black"
                 onChange={val =>
@@ -240,7 +240,7 @@ const MatchNotes = ({route}: any) => {
                 disabled={false}
               />
               <AppInputLabel
-                height={80}
+                height={70}
                 label="Notes"
                 labelColor="black"
                 onChange={val =>
@@ -262,7 +262,7 @@ const MatchNotes = ({route}: any) => {
                 disabled={false}
               />
               <AppInputLabel
-                height={60}
+                height={70}
                 label="Notes"
                 labelColor="black"
                 onChange={val =>
@@ -284,7 +284,7 @@ const MatchNotes = ({route}: any) => {
                 disabled={false}
               />
               <AppInputLabel
-                height={60}
+                height={70}
                 label="Notes"
                 labelColor="black"
                 onChange={val =>
@@ -346,7 +346,7 @@ const MatchNotes = ({route}: any) => {
                 placeholder={''}
                 value={values.generalComments}
                 error={false}
-                height={60}
+                height={70}
                 onChange={handleChange('generalComments')}
                 hideText={false}
               />
