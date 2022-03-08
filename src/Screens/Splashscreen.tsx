@@ -20,9 +20,9 @@ const Splashscreen = () => {
         }
         await dispatch(checkUser());
       } catch (error) {
-        console.log('Error fetching user', error)
+        console.log('Error fetching user', error);
       } finally {
-        SplashScreen.hide(); 
+        SplashScreen.hide();
         dispatch(setFetchingUser(false));
       }
     })();

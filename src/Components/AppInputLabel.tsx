@@ -21,6 +21,7 @@ const AppInputLabel = (props: AppInputLabelProps) => {
     <View>
       <Text style={{color: props.labelColor}}>{props.label}</Text>
       <TextInput
+        multiline={!props.hideText && true}
         secureTextEntry={props.hideText}
         error={error}
         placeholder={props.placeholder}

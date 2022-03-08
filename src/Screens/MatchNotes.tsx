@@ -240,7 +240,7 @@ const MatchNotes = ({route}: any) => {
                 disabled={false}
               />
               <AppInputLabel
-                height={60}
+                height={80}
                 label="Notes"
                 labelColor="black"
                 onChange={val =>
