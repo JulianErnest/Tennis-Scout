@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import {FlatList, Platform, StyleSheet, Text, View} from 'react-native';
 import db from '@react-native-firebase/firestore';
 import rnfs from 'react-native-fs';
@@ -52,7 +53,7 @@ const AllMatches = () => {
       console.log(androidPath);
       console.log(iosPath);
       const headerString =
-        "Coach Name,Coach's player,Opponent,Match Date,Tournament,General Notes,Serve Rating,Serve Notes,Forehand Rating,Forehand Notes,Backhand Rating,Backhand Notes,Movement Rating,Movement Notes,Come to the net?,Volley Rating,Volley Notes\n";
+        "Coach Name,Coach's player,Opponent,Match Date,Tournament,General Notes,Serve Rating,Serve Notes,Forehand Rating,Forehand Notes,Backhand Rating,Backhand Notes,Movement Rating,Movement Notes,Come to the net?,Volley Rating,Volley Notes,Is Public\n";
       const valuesString = allMatches
         .map(
           x =>
@@ -60,13 +61,15 @@ const AllMatches = () => {
               x.playerLastName
             },${x.opponentFirstName} ${x.opponentLastName},${getFormattedDate(
               new Date(x.tournamentDate),
-            )},${x.tournamentName},${x.generalComments},${x.serve.rating},${
-              x.serve.notes
-            },${x.forehand.rating},${x.forehand.notes},${x.backhand.rating},${
-              x.backhand.notes
-            },${x.movement.rating},${x.movement.notes},${x.netFrequency},${
-              x.volleys.rating
-            },${x.volleys.notes}\n`,
+            )},${x.tournamentName},\"${x.generalComments}\",${
+              x.serve.rating
+            },\"${x.serve.notes}\",${x.forehand.rating},\"${
+              x.forehand.notes
+            }\",${x.backhand.rating},\"${x.backhand.notes}\",${
+              x.movement.rating
+            },\"${x.movement.notes}\",${x.netFrequency},${x.volleys.rating},\"${
+              x.volleys.notes
+            }\",${x.isShareable}\n`,
         )
         .join('');
       const csvString = `${headerString}${valuesString}`;
