@@ -21,6 +21,10 @@ const Login = () => {
     navigate('Register', {});
   }
 
+  function handleForgot() {
+    navigate('ForgotPassword', {});
+  }
+
   async function handleLogin(email: string, password: string) {
     setLoading(true);
     try {
@@ -90,11 +94,18 @@ const Login = () => {
               Login
             </Button>
             <Button
-              onPress={() => handleRegister()}
+              onPress={handleRegister}
               labelStyle={styles.label}
               style={[styles.button, styles.register]}
               mode="outlined">
               Register
+            </Button>
+            <Button
+              onPress={handleForgot}
+              labelStyle={styles.label}
+              style={[styles.button, styles.register]}
+              mode="outlined">
+              Forgot Password
             </Button>
           </>
         )}
