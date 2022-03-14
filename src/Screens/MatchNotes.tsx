@@ -6,6 +6,7 @@ import {Formik} from 'formik';
 import Icon from 'react-native-vector-icons/Feather';
 import Toast from 'react-native-toast-message';
 import auth from '@react-native-firebase/auth';
+import {ActivityIndicator} from 'react-native-paper';
 
 import {
   editMatchNotes,
@@ -43,6 +44,7 @@ const MatchNotes = ({route}: any) => {
   });
 
   async function handleSubmitForm(values: FormValues) {
+    console.log(uploading);
     if (!uploading) {
       setUploading(true);
       let sent;
@@ -99,6 +101,11 @@ const MatchNotes = ({route}: any) => {
 
   return (
     <View>
+      <ActivityIndicator
+        style={styles.loading}
+        animating={uploading}
+        color="gray"
+      />
       <ScrollView
         scrollEnabled={scrollEnabled}
         contentContainerStyle={styles.container}>
@@ -252,12 +259,15 @@ const MatchNotes = ({route}: any) => {
                 hideText={false}
               />
 
-              <Text style={styles.bigText}>Volleys</Text>
+              <Text style={styles.bigText}>Volleys & Net Play</Text>
               <AppSlider
                 label="Rating"
-                value={values.volleys.rating}
+                value={values.volleysAndNetPlay.rating}
                 handleValueChange={val =>
-                  setFieldValue('volleys', {...values.volleys, rating: val})
+                  setFieldValue('volleysAndNetPlay', {
+                    ...values.volleysAndNetPlay,
+                    rating: val,
+                  })
                 }
                 disabled={false}
               />
@@ -266,35 +276,17 @@ const MatchNotes = ({route}: any) => {
                 label="Notes"
                 labelColor="black"
                 onChange={val =>
-                  setFieldValue('volleys', {...values.volleys, notes: val})
+                  setFieldValue('volleysAndNetPlay', {
+                    ...values.volleysAndNetPlay,
+                    notes: val,
+                  })
                 }
                 placeholder={''}
-                value={values.volleys.notes}
+                value={values.volleysAndNetPlay.notes}
                 error={false}
                 hideText={false}
               />
 
-              <Text style={styles.bigText}>Net Play</Text>
-              <AppSlider
-                label="Notes"
-                value={values.netPlay.rating}
-                handleValueChange={val =>
-                  setFieldValue('netPlay', {...values.netPlay, rating: val})
-                }
-                disabled={false}
-              />
-              <AppInputLabel
-                height={70}
-                label="Notes"
-                labelColor="black"
-                onChange={val =>
-                  setFieldValue('netPlay', {...values.netPlay, notes: val})
-                }
-                placeholder={''}
-                value={values.netPlay.notes}
-                error={false}
-                hideText={false}
-              />
               <Text style={styles.bigText}>Frequency of going to net</Text>
               <View style={styles.radioContainer}>
                 <AppRadioButton
@@ -398,6 +390,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 17,
     textAlign: 'center',
+  },
+  loading: {
+    flex: 1,
+    position: 'absolute',
+    top: '50%',
+    left: '45%',
+    zIndex: 10,
   },
   optionalNotes: {
     textAlign: 'center',
