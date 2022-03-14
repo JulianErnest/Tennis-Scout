@@ -6,8 +6,8 @@ export type OpponentArea = {
 export type NetFrequency = 'Rarely' | 'Sometimes' | 'Always';
 
 export type FormValues = {
-  playerFirstName: string;
-  playerLastName: string;
+  playerFirstName?: string;
+  playerLastName?: string;
   opponentFirstName: string;
   opponentLastName: string;
   tournamentName: string;
@@ -16,8 +16,7 @@ export type FormValues = {
   forehand: OpponentArea;
   backhand: OpponentArea;
   movement: OpponentArea;
-  volleys: OpponentArea;
-  netPlay: OpponentArea;
+  volleysAndNetPlay: OpponentArea;
   netFrequency: NetFrequency;
   isShareable: boolean;
   generalComments: string;
