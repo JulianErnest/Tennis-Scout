@@ -21,11 +21,7 @@ export const initialFormValues: FormValues = {
     rating: 0,
     notes: '',
   },
-  volleys: {
-    rating: 0,
-    notes: '',
-  },
-  netPlay: {
+  volleysAndNetPlay: {
     rating: 0,
     notes: '',
   },
