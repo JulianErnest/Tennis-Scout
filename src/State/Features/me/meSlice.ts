@@ -268,8 +268,8 @@ export const meSlice = createSlice({
     builder.addCase(resetPassword.fulfilled, () => {
       Toast.show({
         type: 'success',
-        text1: 'Email sent successfully',
-        visibilityTime: 2000,
+        text1: 'Email sent, check your inbox',
+        visibilityTime: 3000,
       });
     });
     builder.addCase(resetPassword.rejected, (_, {payload}) => {
