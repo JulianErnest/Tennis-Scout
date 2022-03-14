@@ -91,7 +91,7 @@ export const resetPassword = createAsyncThunk(
       }
       if (err.code === 'auth/user-not-found') {
         return thunkApi.rejectWithValue(
-          'Email address does not correspond to any user',
+          'Email address does not match our records',
         );
       }
       return thunkApi.rejectWithValue(
