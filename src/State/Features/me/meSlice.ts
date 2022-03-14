@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import Toast from 'react-native-toast-message';
 
 import {RootState} from '../../hooks';
 import {getUserType, setUserType} from '../../../Helpers/StorageFunctions';
@@ -78,8 +79,30 @@ export const register = createAsyncThunk(
   },
 );
 
+export const resetPassword = createAsyncThunk(
+  'meSlice/forgot',
+  async (email: string, thunkApi) => {
+    try {
+      const sendEmail = await auth().sendPasswordResetEmail(email);
+      console.log(sendEmail);
+    } catch (err: any) {
+      if (err.code === 'auth/invalid-email') {
+        return thunkApi.rejectWithValue('That email address is invalid!');
+      }
+      if (err.code === 'auth/user-not-found') {
+        return thunkApi.rejectWithValue(
+          'Email address does not correspond to any user',
+        );
+      }
+      return thunkApi.rejectWithValue(
+        'Unable to process request, please try again later',
+      );
+    }
+  },
+);
+
 export const login = createAsyncThunk(
-  'meSLice/register',
+  'mesLice/register',
   async (params: LoginParams, thunkApi) => {
     try {
       const signUp = await auth().signInWithEmailAndPassword(
@@ -241,6 +264,21 @@ export const meSlice = createSlice({
       state.userType = 'coach';
       state.currentUser = payload as LoggedInCoach;
       state.profileCreated = payload?.profileCreated ?? false;
+    });
+    builder.addCase(resetPassword.fulfilled, () => {
+      Toast.show({
+        type: 'success',
+        text1: 'Email sent successfully',
+        visibilityTime: 2000,
+      });
+    });
+    builder.addCase(resetPassword.rejected, (_, {payload}) => {
+      console.log(payload);
+      Toast.show({
+        type: 'error',
+        text1: payload as string,
+        visibilityTime: 2000,
+      });
     });
   },
 });
