@@ -53,7 +53,7 @@ const AllMatches = () => {
       console.log(androidPath);
       console.log(iosPath);
       const headerString =
-        "Coach Name,Coach's player,Opponent,Match Date,Tournament,General Notes,Serve Rating,Serve Notes,Forehand Rating,Forehand Notes,Backhand Rating,Backhand Notes,Movement Rating,Movement Notes,Come to the net?,Volley Rating,Volley Notes,Is Public\n";
+        "Coach Name,Coach's player,Opponent,Match Date,Tournament,General Notes,Serve Rating,Serve Notes,Forehand Rating,Forehand Notes,Backhand Rating,Backhand Notes,Movement Rating,Movement Notes,Come to the net?,Volleys and Net Play Rating,Volleys and Net Play Notes,Is Public\n";
       const valuesString = allMatches
         .map(
           x =>
@@ -67,9 +67,9 @@ const AllMatches = () => {
               x.forehand.notes
             }\",${x.backhand.rating},\"${x.backhand.notes}\",${
               x.movement.rating
-            },\"${x.movement.notes}\",${x.netFrequency},${x.volleys.rating},\"${
-              x.volleys.notes
-            }\",${x.isShareable}\n`,
+            },\"${x.movement.notes}\",${x.netFrequency},${
+              x.volleysAndNetPlay.rating
+            },\"${x.volleysAndNetPlay.notes}\",${x.isShareable}\n`,
         )
         .join('');
       const csvString = `${headerString}${valuesString}`;
