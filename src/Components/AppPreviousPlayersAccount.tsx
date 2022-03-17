@@ -56,7 +56,7 @@ const AppPreviousPlayersAccount = ({
                 />
                 <View style={styles.iconContainer} />
                 <Field name="firstName">
-                  {({field}: any) => (
+                  {() => (
                     <AppInputLabel
                       height={38}
                       labelColor="black"
@@ -65,6 +65,7 @@ const AppPreviousPlayersAccount = ({
                       onChange={handleChange(`previousPlayers.${i}.firstName`)}
                       placeholder=""
                       error={errors.currentFirstName !== ''}
+                      hideText={false}
                     />
                   )}
                 </Field>
@@ -72,7 +73,7 @@ const AppPreviousPlayersAccount = ({
                   <AppErrorText color="black" error={err.firstName} />
                 )}
                 <Field name="lastName">
-                  {({field}: any) => (
+                  {() => (
                     <AppInputLabel
                       height={38}
                       labelColor="black"
@@ -81,6 +82,7 @@ const AppPreviousPlayersAccount = ({
                       onChange={handleChange(`previousPlayers.${i}.lastName`)}
                       placeholder=""
                       error={errors.currentLastName !== ''}
+                      hideText={false}
                     />
                   )}
                 </Field>
