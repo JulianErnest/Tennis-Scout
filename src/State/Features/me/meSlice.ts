@@ -10,6 +10,8 @@ import {ADMIN} from './../../../secret';
 
 export type RegisterParams = {
   email: string;
+  playerFirstName: '';
+  playerLastName: '';
   password: string;
   confirmPassword: string;
 };
@@ -60,6 +62,8 @@ export const register = createAsyncThunk(
         uid: user.uid,
         email: params.email,
         applicationDate: Date.now(),
+        playerFirstName: params.playerFirstName,
+        playerLastName: params.playerLastName,
       });
       await auth().signOut();
       return true;

@@ -1,7 +1,8 @@
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import * as Yup from 'yup';
 import Icon from 'react-native-vector-icons/Feather';
+import auth from '@react-native-firebase/auth';
 import {Formik} from 'formik';
 
 import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
@@ -12,7 +13,11 @@ import AppDatePicker from '../Components/AppDatePicker';
 import {createProfile, PreviousPlayers} from '../State/Features/me/meSlice';
 import AppPreviousPlayers from '../Components/AppPreviousPlayers';
 import AppErrorText from '../Components/AppErrorText';
-import {useAppDispatch} from '../State/hooks';
+import {useAppDispatch, useAppSelector} from '../State/hooks';
+import {
+  getUserDetails,
+  selectUserAccountDetails,
+} from '../State/Features/account/accountSlice';
 
 export type ProfileInput = {
   coachFirstName: string;
@@ -26,6 +31,7 @@ export type ProfileInput = {
 
 const CreateProfile = () => {
   const dispatch = useAppDispatch();
+  const coach = useAppSelector(selectUserAccountDetails);
   const initialValues = {
     coachFirstName: '',
     coachLastName: '',
@@ -35,6 +41,7 @@ const CreateProfile = () => {
     currentGender: '',
     previousPlayers: [] as PreviousPlayers[],
   };
+  const formRef = useRef<any>();
 
   const CreateProfileSchema = Yup.object().shape({
     coachFirstName: Yup.string().required('First name is required'),
@@ -71,6 +78,14 @@ const CreateProfile = () => {
     setValues({...values, previousPlayers});
   }
 
+  useEffect(() => {
+    dispatch(getUserDetails(auth().currentUser?.uid as string));
+  }, [dispatch]);
+
+  useEffect(() => {
+    formRef.current.setFieldValue('currentFirstName', coach.currentFirstName);
+    formRef.current.setFieldValue('currentLastName', coach.currentLastName);
+  }, [coach.currentFirstName, coach.currentLastName]);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -78,6 +93,7 @@ const CreateProfile = () => {
         style={styles.scrollView}>
         <Text style={styles.introText}>Let's set up your info</Text>
         <Formik
+          innerRef={formRef as any}
           validationSchema={CreateProfileSchema}
           initialValues={initialValues}
           onSubmit={values => submitProfile(values)}>

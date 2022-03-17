@@ -11,13 +11,15 @@ import * as Yup from 'yup';
 import {Button} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 
-import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
+import {Colors} from '../Styles/GlobalStyles';
 import AppInputLabel from '../Components/AppInputLabel';
 import {navigate} from '../Navigation/NavigationUtils';
 import {useAppDispatch} from '../State/hooks';
 import {register, RegisterParams} from '../State/Features/me/meSlice';
 import {Formik} from 'formik';
 import AppErrorText from '../Components/AppErrorText';
+import {ScrollView} from 'react-native-gesture-handler';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +27,8 @@ const Login = () => {
   const [checked, setChecked] = useState(false);
   const initialValues: RegisterParams = {
     email: '',
+    playerFirstName: '',
+    playerLastName: '',
     password: '',
     confirmPassword: '',
   };
@@ -36,6 +40,8 @@ const Login = () => {
     password: Yup.string()
       .required('Password is required')
       .min(6, 'Password is too short'),
+    playerFirstName: Yup.string().required('Player first name is required'),
+    playerLastName: Yup.string().required('Player last name is required'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Confirm password is required'),
@@ -47,9 +53,18 @@ const Login = () => {
 
   async function confirmRegister(values: RegisterParams) {
     setLoading(true);
-    const {email, password, confirmPassword} = values;
+    const {email, password, confirmPassword, playerFirstName, playerLastName} =
+      values;
     try {
-      await dispatch(register({email, password, confirmPassword})).unwrap();
+      await dispatch(
+        register({
+          email,
+          playerFirstName,
+          playerLastName,
+          password,
+          confirmPassword,
+        }),
+      ).unwrap();
       navigate('Confirm', {});
     } catch (e) {
       Toast.show({
@@ -70,8 +85,7 @@ const Login = () => {
   }
 
   return (
-    <View style={GlobalStyles.centerView}>
-      <Image source={require('../Assets/logo-full.png')} style={styles.image} />
+    <SafeAreaView>
       <Formik
         validationSchema={SignupSchema}
         initialValues={initialValues}
@@ -79,70 +93,110 @@ const Login = () => {
         {({handleChange, handleSubmit, values, errors, touched}) => {
           return (
             <>
-              <AppInputLabel
-                labelColor="black"
-                label="Email"
-                value={values.email}
-                onChange={handleChange('email')}
-                placeholder=""
-                error={errors.email !== ''}
-                height={40}
-                hideText={false}
-              />
-              {errors.email && touched.email && (
-                <AppErrorText color="red" error={errors.email} />
-              )}
-              <AppInputLabel
-                labelColor="black"
-                label="Password"
-                value={values.password}
-                onChange={handleChange('password')}
-                placeholder=""
-                error={errors.password !== ''}
-                height={40}
-                hideText={true}
-              />
-              {errors.password && touched.password && (
-                <AppErrorText color="red" error={errors.password} />
-              )}
-              <AppInputLabel
-                labelColor="black"
-                label="Confirm Password"
-                value={values.confirmPassword}
-                onChange={handleChange('confirmPassword')}
-                placeholder=""
-                error={errors.confirmPassword !== ''}
-                height={40}
-                hideText={true}
-              />
-              {errors.confirmPassword && touched.confirmPassword && (
-                <AppErrorText color="red" error={errors.confirmPassword} />
-              )}
-              <View style={styles.row}>
-                <TouchableOpacity
-                  onPress={() => setChecked(!checked)}
-                  style={!checked ? styles.checked : styles.unchecked}
+              <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <Image
+                  source={require('../Assets/logo-full.png')}
+                  style={styles.image}
                 />
-                <Text style={styles.agreeText} onPress={handleGotoLink}>
-                  I agree to the end user license agreement.
+                <AppInputLabel
+                  labelColor="black"
+                  label="Email"
+                  value={values.email}
+                  onChange={handleChange('email')}
+                  placeholder=""
+                  error={errors.email !== ''}
+                  height={40}
+                  hideText={false}
+                />
+                {errors.email && touched.email && (
+                  <AppErrorText color="red" error={errors.email} />
+                )}
+                <AppInputLabel
+                  labelColor="black"
+                  label="First Name of Current Player"
+                  value={values.playerFirstName}
+                  onChange={handleChange('playerFirstName')}
+                  placeholder=""
+                  error={errors.playerLastName !== ''}
+                  height={40}
+                  hideText={false}
+                />
+                {errors.playerFirstName && touched.playerFirstName && (
+                  <AppErrorText color="red" error={errors.playerFirstName} />
+                )}
+                <AppInputLabel
+                  labelColor="black"
+                  label="Last Name of Current Player"
+                  value={values.playerLastName}
+                  onChange={handleChange('playerLastName')}
+                  placeholder=""
+                  error={errors.playerLastName !== ''}
+                  height={40}
+                  hideText={false}
+                />
+                {errors.playerLastName && touched.playerLastName && (
+                  <AppErrorText color="red" error={errors.playerLastName} />
+                )}
+                <Text style={styles.messageText}>
+                  DDSA admins will need to verify that you are coaching this
+                  player, and may contact your email as part of this process.
+                  Your account is pending until this approval occurs. Note this
+                  app is only available to coaches that have a player competing
+                  in ATP, WTA and ITF level events and have ranking points
                 </Text>
-              </View>
-              <Text onPress={() => gotoLogin()} style={styles.toLogin}>
-                Already have an account?
-              </Text>
-              <Button
-                disabled={loading || !checked}
-                loading={loading}
-                onPress={handleSubmit}
-                style={styles.button}
-                mode="contained">
-                Register
-              </Button>
+                <AppInputLabel
+                  labelColor="black"
+                  label="Password"
+                  value={values.password}
+                  onChange={handleChange('password')}
+                  placeholder=""
+                  error={errors.password !== ''}
+                  height={40}
+                  hideText={true}
+                />
+                {errors.password && touched.password && (
+                  <AppErrorText color="red" error={errors.password} />
+                )}
+                <AppInputLabel
+                  labelColor="black"
+                  label="Confirm Password"
+                  value={values.confirmPassword}
+                  onChange={handleChange('confirmPassword')}
+                  placeholder=""
+                  error={errors.confirmPassword !== ''}
+                  height={40}
+                  hideText={true}
+                />
+                {errors.confirmPassword && touched.confirmPassword && (
+                  <AppErrorText color="red" error={errors.confirmPassword} />
+                )}
+                <View style={styles.row}>
+                  <TouchableOpacity
+                    onPress={() => setChecked(!checked)}
+                    style={!checked ? styles.checked : styles.unchecked}
+                  />
+                  <Text style={styles.agreeText} onPress={handleGotoLink}>
+                    I agree to the end user license agreement.
+                  </Text>
+                </View>
+                <Text onPress={() => gotoLogin()} style={styles.toLogin}>
+                  Already have an account?
+                </Text>
+                <Button
+                  labelStyle={styles.buttonLabel}
+                  disabled={loading || !checked}
+                  loading={loading}
+                  onPress={handleSubmit}
+                  style={styles.button}
+                  mode="contained">
+                  Register
+                </Button>
+              </ScrollView>
             </>
           );
         }}
       </Formik>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -161,6 +215,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     marginTop: 30,
   },
+  buttonLabel: {
+    color: 'white',
+  },
   checked: {
     backgroundColor: 'lightgray',
     width: 20,
@@ -177,12 +234,27 @@ const styles = StyleSheet.create({
   label: {
     color: Colors.primary,
   },
+  messageText: {
+    width: 270,
+    fontSize: 10,
+    fontStyle: 'italic',
+    textAlign: 'justify',
+    marginBottom: 20,
+  },
   register: {
     borderColor: Colors.primary,
   },
   row: {
     flexDirection: 'row',
     width: 270,
+  },
+  scroll: {
+    marginTop: 20,
+  },
+  scrollContainer: {
+    alignItems: 'center',
+    paddingBottom: 70,
+    marginVertical: 50,
   },
   unchecked: {
     backgroundColor: Colors.primary,

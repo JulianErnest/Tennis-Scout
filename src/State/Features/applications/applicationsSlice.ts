@@ -11,6 +11,8 @@ export const acceptApplication = createAsyncThunk(
         uid: application.uid,
         profileCreated: false,
         dateAccepted: Date.now(),
+        currentFirstName: application.playerFirstName,
+        currentLastName: application.playerLastName,
       });
       await db().collection('Applications').doc(application.uid).delete();
       return true;
@@ -38,6 +40,8 @@ export type Application = {
   email: string;
   uid: string;
   applicationDate: number;
+  playerFirstName: string;
+  playerLastName: string;
 };
 
 type InitialState = {
