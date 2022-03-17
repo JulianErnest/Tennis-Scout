@@ -1,5 +1,5 @@
 import {Image, StyleSheet, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Button} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 import {Formik} from 'formik';
@@ -11,16 +11,19 @@ import {navigate} from '../Navigation/NavigationUtils';
 import {login} from '../State/Features/me/meSlice';
 import {useAppDispatch} from '../State/hooks';
 import AppErrorText from '../Components/AppErrorText';
+import {
+  getSavedUserCredentials,
+  saveUserCredentials,
+} from '../Helpers/StorageFunctions';
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const formRef = useRef<any>();
   function handleRegister() {
     navigate('Register', {});
   }
-
   function handleForgot() {
     navigate('ForgotPassword', {});
   }
@@ -29,6 +32,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await dispatch(login({email, password})).unwrap();
+      saveUserCredentials(email, password);
       console.log(response);
     } catch (e) {
       setHasError(true);
@@ -40,6 +44,19 @@ const Login = () => {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const savedCredentials = await getSavedUserCredentials();
+        if (savedCredentials) {
+          formRef.current.setValues(savedCredentials);
+        }
+      } catch (e) {
+        console.log('Error getting/setting saved credentails');
+      }
+    })();
+  }, []);
 
   const fields = {
     email: '',
@@ -55,6 +72,7 @@ const Login = () => {
     <View style={GlobalStyles.centerView}>
       <Image source={require('../Assets/logo-full.png')} style={styles.image} />
       <Formik
+        innerRef={formRef as any}
         initialValues={fields}
         onSubmit={form => handleLogin(form.email, form.password)}
         validationSchema={validationSchema}>
