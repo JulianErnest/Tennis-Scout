@@ -19,7 +19,11 @@ import AppErrorText from '../Components/AppErrorText';
 import AppInputLabel from '../Components/AppInputLabel';
 import AppRadioButton from '../Components/AppRadioButton';
 import {InitialValues} from '../State/Features/account/AccountConstants';
-import {getLoggedInUser, resetMe} from '../State/Features/me/meSlice';
+import {
+  getLoggedInUser,
+  PreviousPlayers,
+  resetMe,
+} from '../State/Features/me/meSlice';
 import {resetApplications} from '../State/Features/applications/applicationsSlice';
 import {resetMatch} from '../State/Features/match/matchSlice';
 import {deleteUserType} from '../Helpers/StorageFunctions';
@@ -33,6 +37,19 @@ const UpdateAccount = ({route}: any) => {
   const [reauthSuccess, setReauthSuccess] = useState(false);
   const formRef = useRef<any>();
   const userType = route.params?.type;
+
+  function addPreviousPlayer(values: any, setValues: any) {
+    const playerObject: PreviousPlayers = {
+      firstName: '',
+      lastName: '',
+      startDate: 0,
+      endDate: 0,
+      gender: '',
+    };
+    const previousPlayers = [...values.previousPlayers];
+    previousPlayers.push(playerObject);
+    setValues({...values, previousPlayers});
+  }
 
   useEffect(() => {
     formRef.current.setValues(accountDetails);
@@ -278,6 +295,12 @@ const UpdateAccount = ({route}: any) => {
                   setFieldValue={setFieldValue}
                 />
               )}
+              <Icon
+                name="plus"
+                color={Colors.primary}
+                size={20}
+                onPress={() => addPreviousPlayer(values, setValues)}
+              />
               <Button
                 style={styles.button}
                 onPress={handleSubmit}
@@ -309,6 +332,7 @@ const styles = StyleSheet.create({
   button: {
     width: 200,
     height: 40,
+    marginTop: 30,
     marginBottom: 30,
     backgroundColor: Colors.primary,
   },
