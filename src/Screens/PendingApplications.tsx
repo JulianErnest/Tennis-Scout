@@ -60,7 +60,13 @@ const PendingApplications = () => {
         keyExtractor={data => data.email}
         renderItem={({item}) => (
           <View style={styles.container}>
-            <Text style={styles.email}>Email: {item.email}</Text>
+            <Text style={styles.text}>Email: {item.email}</Text>
+            {item.playerFirstName && item.playerLastName && (
+              <Text
+                style={
+                  styles.text
+                }>{`Current Player: ${item.playerFirstName} ${item.playerLastName}`}</Text>
+            )}
             <View style={styles.actionsRow}>
               <Icon
                 style={styles.icon}
@@ -100,7 +106,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     borderRadius: 15,
   },
-  email: {
+  text: {
     color: 'white',
   },
   icon: {
