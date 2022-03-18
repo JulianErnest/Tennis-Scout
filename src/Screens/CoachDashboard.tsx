@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginLeft: 30,
     fontSize: 20,
+    color: 'black',
   },
   column: {
     flexBasis: '50%',

@@ -351,16 +351,18 @@ const MatchNotes = ({route}: any) => {
                     onPress={handleSubmit}
                   />
                   {'  '}
-                  <Text>
+                  <Text style={styles.actions}>
                     {route.params?.type !== 'edit' ? 'Create' : 'Edit'}
                   </Text>
                 </Text>
-                <Text onPress={() => saveToLocalStorage(values)}>
+                <Text
+                  style={styles.actions}
+                  onPress={() => saveToLocalStorage(values)}>
                   <Icon name="pocket" color={Colors.primary} size={20} />
                   {'  '}
                   <Text>Draft</Text>
                 </Text>
-                <Text onPress={() => resetForm()}>
+                <Text style={styles.actions} onPress={() => resetForm()}>
                   <Icon name="x-circle" color={Colors.primary} size={20} />
                   {'  '}
                   <Text>Clear</Text>
@@ -377,10 +379,14 @@ const MatchNotes = ({route}: any) => {
 export default MatchNotes;
 
 const styles = StyleSheet.create({
+  actions: {
+    color: 'black',
+  },
   bigText: {
     fontWeight: 'bold',
     fontSize: 18,
     marginTop: 10,
+    color: 'black',
   },
   container: {
     padding: 30,

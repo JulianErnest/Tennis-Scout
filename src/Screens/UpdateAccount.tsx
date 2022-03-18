@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   genderLabel: {
     width: 270,
     textAlign: 'left',
-    color: 'white',
+    color: 'black',
   },
   genderRow: {
     flexDirection: 'row',
