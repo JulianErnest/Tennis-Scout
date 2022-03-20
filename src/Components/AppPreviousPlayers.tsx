@@ -66,6 +66,7 @@ const AppPreviousPlayers = ({
                       placeholder=""
                       error={errors.currentFirstName !== ''}
                       hideText={false}
+                      multiline={false}
                     />
                   )}
                 </Field>
@@ -83,6 +84,7 @@ const AppPreviousPlayers = ({
                       placeholder=""
                       error={errors.currentLastName !== ''}
                       hideText={false}
+                      multiline={false}
                     />
                   )}
                 </Field>

@@ -87,6 +87,7 @@ const Login = () => {
               placeholder=""
               error={false}
               hideText={false}
+              multiline={false}
             />
             {errors.email && touched.email && (
               <AppErrorText color="red" error={errors.email} />
@@ -100,6 +101,7 @@ const Login = () => {
               labelColor={'black'}
               height={40}
               hideText={true}
+              multiline={false}
             />
             {errors.password && touched.password && (
               <AppErrorText color="red" error={errors.password} />

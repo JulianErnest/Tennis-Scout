@@ -125,6 +125,7 @@ const MatchNotes = ({route}: any) => {
                 value={values.opponentFirstName}
                 error={false}
                 hideText={false}
+                multiline={false}
               />
               <AppInputLabel
                 height={38}
@@ -135,6 +136,7 @@ const MatchNotes = ({route}: any) => {
                 value={values.opponentLastName}
                 error={false}
                 hideText={false}
+                multiline={false}
               />
               <AppInputLabel
                 height={38}
@@ -145,6 +147,7 @@ const MatchNotes = ({route}: any) => {
                 value={values.tournamentName}
                 error={false}
                 hideText={false}
+                multiline={false}
               />
               <AppDatePicker
                 date={new Date(values.tournamentDate) ?? new Date()}
@@ -191,6 +194,7 @@ const MatchNotes = ({route}: any) => {
                 value={values.serve.notes}
                 error={false}
                 hideText={false}
+                multiline={true}
               />
 
               <Text style={styles.bigText}>Forehand</Text>
@@ -213,6 +217,7 @@ const MatchNotes = ({route}: any) => {
                 value={values.forehand.notes}
                 error={false}
                 hideText={false}
+                multiline={true}
               />
 
               <Text style={styles.bigText}>Backhand</Text>
@@ -235,6 +240,7 @@ const MatchNotes = ({route}: any) => {
                 value={values.backhand.notes}
                 error={false}
                 hideText={false}
+                multiline={true}
               />
 
               <Text style={styles.bigText}>Movement</Text>
@@ -257,6 +263,7 @@ const MatchNotes = ({route}: any) => {
                 value={values.movement.notes}
                 error={false}
                 hideText={false}
+                multiline={true}
               />
 
               <Text style={styles.bigText}>Volleys & Net Play</Text>
@@ -285,6 +292,7 @@ const MatchNotes = ({route}: any) => {
                 value={values.volleysAndNetPlay.notes}
                 error={false}
                 hideText={false}
+                multiline={true}
               />
 
               <Text style={styles.bigText}>Frequency of going to net</Text>
@@ -341,6 +349,7 @@ const MatchNotes = ({route}: any) => {
                 height={70}
                 onChange={handleChange('generalComments')}
                 hideText={false}
+                multiline={true}
               />
               <View style={styles.radioContainer}>
                 <Text>

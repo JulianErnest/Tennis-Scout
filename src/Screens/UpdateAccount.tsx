@@ -141,6 +141,7 @@ const UpdateAccount = ({route}: any) => {
               placeholder=""
               error={false}
               hideText={true}
+              multiline={false}
             />
           </>
         )}
@@ -164,6 +165,7 @@ const UpdateAccount = ({route}: any) => {
               placeholder=""
               error={false}
               hideText={true}
+              multiline={false}
             />
             <Button
               style={styles.button}
@@ -198,6 +200,7 @@ const UpdateAccount = ({route}: any) => {
                 placeholder=""
                 error={errors.coachLastName !== ''}
                 hideText={false}
+                multiline={false}
               />
               <AppInputLabel
                 height={38}
@@ -208,6 +211,7 @@ const UpdateAccount = ({route}: any) => {
                 placeholder=""
                 error={errors.coachLastName !== ''}
                 hideText={false}
+                multiline={false}
               />
               {errors.coachFirstName && touched.coachFirstName && (
                 <AppErrorText color="black" error={errors.coachFirstName} />
@@ -221,6 +225,7 @@ const UpdateAccount = ({route}: any) => {
                 placeholder=""
                 error={errors.coachLastName !== ''}
                 hideText={false}
+                multiline={false}
               />
               {errors.coachLastName && touched.coachLastName && (
                 <AppErrorText color="black" error={errors.coachLastName} />
@@ -235,6 +240,7 @@ const UpdateAccount = ({route}: any) => {
                 placeholder=""
                 error={errors.currentFirstName !== ''}
                 hideText={false}
+                multiline={false}
               />
               {errors.currentFirstName && touched.currentFirstName && (
                 <AppErrorText color="black" error={errors.currentFirstName} />
@@ -248,6 +254,7 @@ const UpdateAccount = ({route}: any) => {
                 placeholder=""
                 error={errors.currentLastName !== ''}
                 hideText={false}
+                multiline={false}
               />
               {errors.currentLastName && touched.currentLastName && (
                 <AppErrorText color="black" error={errors.currentLastName} />

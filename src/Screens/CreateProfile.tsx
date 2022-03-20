@@ -118,6 +118,7 @@ const CreateProfile = () => {
                   placeholder=""
                   error={errors.coachLastName !== ''}
                   hideText={false}
+                  multiline={false}
                 />
                 {errors.coachFirstName && touched.coachFirstName && (
                   <AppErrorText color="white" error={errors.coachFirstName} />
@@ -131,6 +132,7 @@ const CreateProfile = () => {
                   placeholder=""
                   error={errors.coachLastName !== ''}
                   hideText={false}
+                  multiline={false}
                 />
                 {errors.coachLastName && touched.coachLastName && (
                   <AppErrorText color="white" error={errors.coachLastName} />
@@ -145,6 +147,7 @@ const CreateProfile = () => {
                   placeholder=""
                   error={errors.currentFirstName !== ''}
                   hideText={false}
+                  multiline={false}
                 />
                 {errors.currentFirstName && touched.currentFirstName && (
                   <AppErrorText color="white" error={errors.currentFirstName} />
@@ -158,6 +161,7 @@ const CreateProfile = () => {
                   placeholder=""
                   error={errors.currentLastName !== ''}
                   hideText={false}
+                  multiline={false}
                 />
                 {errors.currentLastName && touched.currentLastName && (
                   <AppErrorText color="white" error={errors.currentLastName} />

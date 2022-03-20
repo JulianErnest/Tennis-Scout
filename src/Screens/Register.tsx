@@ -107,6 +107,7 @@ const Login = () => {
                   error={errors.email !== ''}
                   height={40}
                   hideText={false}
+                  multiline={false}
                 />
                 {errors.email && touched.email && (
                   <AppErrorText color="red" error={errors.email} />
@@ -120,6 +121,7 @@ const Login = () => {
                   error={errors.playerLastName !== ''}
                   height={40}
                   hideText={false}
+                  multiline={false}
                 />
                 {errors.playerFirstName && touched.playerFirstName && (
                   <AppErrorText color="red" error={errors.playerFirstName} />
@@ -133,6 +135,7 @@ const Login = () => {
                   error={errors.playerLastName !== ''}
                   height={40}
                   hideText={false}
+                  multiline={false}
                 />
                 {errors.playerLastName && touched.playerLastName && (
                   <AppErrorText color="red" error={errors.playerLastName} />
@@ -153,6 +156,7 @@ const Login = () => {
                   error={errors.password !== ''}
                   height={40}
                   hideText={true}
+                  multiline={false}
                 />
                 {errors.password && touched.password && (
                   <AppErrorText color="red" error={errors.password} />
@@ -166,6 +170,7 @@ const Login = () => {
                   error={errors.confirmPassword !== ''}
                   height={40}
                   hideText={true}
+                  multiline={false}
                 />
                 {errors.confirmPassword && touched.confirmPassword && (
                   <AppErrorText color="red" error={errors.confirmPassword} />
