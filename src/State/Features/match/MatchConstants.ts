@@ -1,6 +1,7 @@
 import {FormValues} from './MatchTypes';
 
 export const initialFormValues: FormValues = {
+  useExistingPlayer: true,
   opponentFirstName: '',
   opponentLastName: '',
   tournamentName: '',
