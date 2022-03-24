@@ -156,6 +156,7 @@ const Login = () => {
                   error={errors.password !== ''}
                   height={40}
                   hideText={true}
+                  textContentType={'oneTimeCode'}
                   multiline={false}
                 />
                 {errors.password && touched.password && (
@@ -169,6 +170,7 @@ const Login = () => {
                   placeholder=""
                   error={errors.confirmPassword !== ''}
                   height={40}
+                  textContentType={'oneTimeCode'}
                   hideText={true}
                   multiline={false}
                 />
