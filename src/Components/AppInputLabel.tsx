@@ -13,7 +13,9 @@ type AppInputLabelProps = {
   onChange: (text: string) => void;
   height: number;
   hideText: boolean;
+  textContentType?: string;
   multiline: boolean;
+  disabled?: boolean;
 };
 
 const AppInputLabel = (props: AppInputLabelProps) => {
@@ -22,6 +24,8 @@ const AppInputLabel = (props: AppInputLabelProps) => {
     <View>
       <Text style={{color: props.labelColor}}>{props.label}</Text>
       <TextInput
+        disabled={props.disabled ?? false}
+        textContentType={props.textContentType ?? ('none' as any)}
         multiline={props.multiline}
         secureTextEntry={props.hideText}
         error={error}
