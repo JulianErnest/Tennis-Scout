@@ -6,6 +6,7 @@ export type OpponentArea = {
 export type NetFrequency = 'Rarely' | 'Sometimes' | 'Always';
 
 export type FormValues = {
+  playerId: string;
   useExistingPlayer?: boolean;
   playerFirstName?: string;
   playerLastName?: string;
