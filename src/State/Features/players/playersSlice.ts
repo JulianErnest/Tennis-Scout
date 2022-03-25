@@ -6,8 +6,18 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
 import {RootState} from '../../hooks';
+import {getUserId} from '../me/meSlice';
+import {FormValues} from '../match/MatchTypes';
 
+const coachPlayerNotesPath = (coachId: string, opponentId: string) =>
+  db()
+    .collection('Coach_Player_Notes')
+    .doc(coachId)
+    .collection('Opponents')
+    .doc(opponentId)
+    .collection('Matches');
 const PLAYERLIST_FILENAME = 'playerList.csv';
+const playerRatingsPath = db().collection('Player_Rating');
 const LAST_RETRIEVE_TIMESTAMP_KEY = 'LASTRETRIEVETIMESTAMP';
 const STORED_PLAYERS_KEY = 'PLAYERLIST';
 const last_upload_timestamp_collection = db()
@@ -31,6 +41,31 @@ const PlayerDataListHeaders = [
   'player_surname',
   'player_full_name',
 ];
+
+// Creates new reference to all of the matches of the coach against a player
+export async function setPlayerMatches(params: FormValues, id: string) {
+  try {
+    await coachPlayerNotesPath(getUserId(), params.playerId).doc(id).set({
+      matchId: true,
+    });
+  } catch (e) {}
+}
+
+// Create new rating entry
+export async function ratePlayer(params: FormValues) {
+  try {
+    await playerRatingsPath.doc(params.playerId).collection('Ratings').add({
+      serve: params.serve.rating,
+      forehand: params.forehand.rating,
+      backhand: params.backhand.rating,
+      movement: params.movement.rating,
+      volleyAndNetPlay: params.volleysAndNetPlay.rating,
+      coachId: getUserId(),
+    });
+  } catch (e) {
+    console.log('Error getting update player ratings', e);
+  }
+}
 
 export async function shouldGetPlayersCSV() {
   try {
@@ -132,10 +167,14 @@ export const retrievePlayersFromStorage = createAsyncThunk(
 
 type InitialState = {
   players: PlayerDataList[];
+  searchPlayerModalVisibility: boolean;
+  filteredPlayers: PlayerDataList[];
 };
 
 const initialState: InitialState = {
   players: [],
+  searchPlayerModalVisibility: false,
+  filteredPlayers: [],
 };
 
 const playersSlice = createSlice({
@@ -147,13 +186,27 @@ const playersSlice = createSlice({
       if (!state.players[state.players.length - 1]) {
         state.players.pop();
       }
+    },
+    setSearchPlayerModalVisibility(state, action) {
+      state.searchPlayerModalVisibility = action.payload;
+    },
+    setFilteredPlayers(state, action) {
       console.log(action.payload);
+      const q: PlayerDataList[] = [...state.players];
+      state.filteredPlayers = q.filter(x =>
+        x.player_full_name.toUpperCase().includes(action.payload.toUpperCase()),
+      );
     },
   },
 });
 
-export const {setPlayers} = playersSlice.actions;
+export const {setPlayers, setSearchPlayerModalVisibility, setFilteredPlayers} =
+  playersSlice.actions;
 
 export const selectPlayers = (state: RootState) => state.playerReducer.players;
+export const selectSearchPlayerModalVisibility = (state: RootState) =>
+  state.playerReducer.searchPlayerModalVisibility;
+export const selectFilteredPlayers = (state: RootState) =>
+  state.playerReducer.filteredPlayers;
 
 export default playersSlice.reducer;
