@@ -199,6 +199,10 @@ export const createProfile = createAsyncThunk(
   },
 );
 
+export const getUserId = () => {
+  return auth().currentUser?.uid ?? '';
+};
+
 type InitialState = {
   loggingIn: boolean;
   userType: UserType;
