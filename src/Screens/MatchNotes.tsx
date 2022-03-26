@@ -1,4 +1,10 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import * as Yup from 'yup';
 import AppInputLabel from '../Components/AppInputLabel';
@@ -27,6 +33,13 @@ import AppDatePicker from '../Components/AppDatePicker';
 import {FormValues, MatchDetails} from '../State/Features/match/MatchTypes';
 import {initialFormValues} from '../State/Features/match/MatchConstants';
 import {getLoggedInUser, selectUserType} from '../State/Features/me/meSlice';
+import {
+  generatePlayerId,
+  PlayerDataList,
+  saveCustomPlayer,
+  setSearchPlayerModalVisibility,
+} from '../State/Features/players/playersSlice';
+import AppPlayerList from '../Components/AppPlayerList';
 
 const MatchNotes = ({route}: any) => {
   const [uploading, setUploading] = useState(false);
@@ -43,32 +56,62 @@ const MatchNotes = ({route}: any) => {
     netFrequency: Yup.string().required('Net frequency is required'),
   });
 
+  function handleSelectedPlayer(player: PlayerDataList) {
+    dispatch(setSearchPlayerModalVisibility(false));
+    formRef.current.setFieldValue(
+      'opponentFirstName',
+      player.player_first_name,
+    );
+    formRef.current.setFieldValue('opponentLastName', player.player_surname);
+    formRef.current.setFieldValue('playerId', player.player_id);
+  }
+
+  function handleSearchModalOpen() {
+    dispatch(setSearchPlayerModalVisibility(true));
+  }
+
   async function handleSubmitForm(values: FormValues) {
-    console.log(uploading);
-    if (!uploading) {
-      setUploading(true);
-      let sent;
-      if (route.params?.type === 'edit') {
-        sent = await dispatch(editMatchNotes(values as MatchDetails)).unwrap();
-      } else {
-        sent = await dispatch(submitMatchNotes(values)).unwrap();
+    console.log('before ye', formRef.current.values);
+    try {
+      if (!uploading) {
+        setUploading(true);
+        let sent;
+        if (route.params?.type === 'edit') {
+          sent = await dispatch(
+            editMatchNotes(values as MatchDetails),
+          ).unwrap();
+        } else {
+          if (!values.playerId) {
+            const customId = generatePlayerId();
+            values.playerId = customId;
+            formRef.current.setFieldValue('playerId', customId);
+          }
+          console.log('after yeye', formRef.current.values);
+          if (!values.useExistingPlayer) {
+            await saveCustomPlayer(values);
+          }
+          sent = await dispatch(submitMatchNotes(values)).unwrap();
+        }
+        if (userType === 'coach') {
+          const uid = auth().currentUser?.uid as string;
+          await dispatch(fetchMatchNotes(uid));
+          await dispatch(getLoggedInUser(uid));
+        }
+        formRef.current.resetForm();
+        await deleteMatchNotes();
+        setUploading(false);
+        Toast.show({
+          type: sent ? 'success' : 'error',
+          text1: sent
+            ? 'Successfully saved match notes'
+            : 'Unable to save match notes, try again later.',
+          visibilityTime: 3000,
+          autoHide: true,
+        });
       }
-      if (userType === 'coach') {
-        const uid = auth().currentUser?.uid as string;
-        await dispatch(fetchMatchNotes(uid));
-        await dispatch(getLoggedInUser(uid));
-      }
-      formRef.current.resetForm();
-      await deleteMatchNotes();
+    } catch (e) {
+      console.log('Error submitting form', e);
       setUploading(false);
-      Toast.show({
-        type: sent ? 'success' : 'error',
-        text1: sent
-          ? 'Successfully saved match notes'
-          : 'Unable to save match notes, try again later.',
-        visibilityTime: 3000,
-        autoHide: true,
-      });
     }
   }
 
@@ -100,288 +143,325 @@ const MatchNotes = ({route}: any) => {
   }, [route.params]);
 
   return (
-    <View>
-      <ActivityIndicator
-        style={styles.loading}
-        animating={uploading}
-        color="gray"
-      />
-      <ScrollView
-        scrollEnabled={scrollEnabled}
-        contentContainerStyle={styles.container}>
-        <Formik
-          innerRef={formRef as any}
-          validationSchema={MatchNotesSchema}
-          initialValues={initialFormValues}
-          onSubmit={values => handleSubmitForm(values)}>
-          {({handleSubmit, handleChange, values, setFieldValue, resetForm}) => (
-            <>
-              <AppInputLabel
-                height={38}
-                label="Opponent First Name"
-                labelColor="black"
-                onChange={handleChange('opponentFirstName')}
-                placeholder={''}
-                value={values.opponentFirstName}
-                error={false}
-                hideText={false}
-                multiline={false}
-              />
-              <AppInputLabel
-                height={38}
-                label="Opponent Last Name"
-                labelColor="black"
-                onChange={handleChange('opponentLastName')}
-                placeholder={''}
-                value={values.opponentLastName}
-                error={false}
-                hideText={false}
-                multiline={false}
-              />
-              <AppInputLabel
-                height={38}
-                label="Tournament Name"
-                labelColor="black"
-                onChange={handleChange('tournamentName')}
-                placeholder={''}
-                value={values.tournamentName}
-                error={false}
-                hideText={false}
-                multiline={false}
-              />
-              <AppDatePicker
-                date={new Date(values.tournamentDate) ?? new Date()}
-                setDate={date => {
-                  setFieldValue('tournamentDate', date.getTime());
-                }}
-                label="Start Date"
-                labelColor="black"
-                value={values.tournamentDate}
-              />
-              <Text style={styles.instruction}>
-                Rate each area of the opponent during the match 1-10
-              </Text>
-              <View style={styles.sliderLabel}>
-                <Text style={styles.sliderLabelText}>Terrible</Text>
-                <Text style={styles.sliderLabelText}>Fair</Text>
-                <Text style={styles.sliderLabelText}>Excellent</Text>
-              </View>
-              <AppSlider
-                label=""
-                value={5.5}
-                handleValueChange={() => null}
-                disabled={true}
-              />
-              <Text style={styles.optionalNotes}>Notes are optional</Text>
-
-              <Text style={styles.bigText}>Serve</Text>
-              <AppSlider
-                label="Rating"
-                value={values.serve.rating}
-                handleValueChange={val =>
-                  setFieldValue('serve', {...values.serve, rating: val})
-                }
-                disabled={false}
-              />
-              <AppInputLabel
-                height={70}
-                label="Notes"
-                labelColor="black"
-                onChange={val =>
-                  setFieldValue('serve', {...values.serve, notes: val})
-                }
-                placeholder={''}
-                value={values.serve.notes}
-                error={false}
-                hideText={false}
-                multiline={true}
-              />
-
-              <Text style={styles.bigText}>Forehand</Text>
-              <AppSlider
-                label="Rating"
-                value={values.forehand.rating}
-                handleValueChange={val =>
-                  setFieldValue('forehand', {...values.forehand, rating: val})
-                }
-                disabled={false}
-              />
-              <AppInputLabel
-                height={70}
-                label="Notes"
-                labelColor="black"
-                onChange={val =>
-                  setFieldValue('forehand', {...values.forehand, notes: val})
-                }
-                placeholder={''}
-                value={values.forehand.notes}
-                error={false}
-                hideText={false}
-                multiline={true}
-              />
-
-              <Text style={styles.bigText}>Backhand</Text>
-              <AppSlider
-                label="Rating"
-                value={values.backhand.rating}
-                handleValueChange={val =>
-                  setFieldValue('backhand', {...values.backhand, rating: val})
-                }
-                disabled={false}
-              />
-              <AppInputLabel
-                height={70}
-                label="Notes"
-                labelColor="black"
-                onChange={val =>
-                  setFieldValue('backhand', {...values.backhand, notes: val})
-                }
-                placeholder={''}
-                value={values.backhand.notes}
-                error={false}
-                hideText={false}
-                multiline={true}
-              />
-
-              <Text style={styles.bigText}>Movement</Text>
-              <AppSlider
-                label="Rating"
-                value={values.movement.rating}
-                handleValueChange={val =>
-                  setFieldValue('movement', {...values.movement, rating: val})
-                }
-                disabled={false}
-              />
-              <AppInputLabel
-                height={70}
-                label="Notes"
-                labelColor="black"
-                onChange={val =>
-                  setFieldValue('movement', {...values.movement, notes: val})
-                }
-                placeholder={''}
-                value={values.movement.notes}
-                error={false}
-                hideText={false}
-                multiline={true}
-              />
-
-              <Text style={styles.bigText}>Volleys & Net Play</Text>
-              <AppSlider
-                label="Rating"
-                value={values.volleysAndNetPlay.rating}
-                handleValueChange={val =>
-                  setFieldValue('volleysAndNetPlay', {
-                    ...values.volleysAndNetPlay,
-                    rating: val,
-                  })
-                }
-                disabled={false}
-              />
-              <AppInputLabel
-                height={70}
-                label="Notes"
-                labelColor="black"
-                onChange={val =>
-                  setFieldValue('volleysAndNetPlay', {
-                    ...values.volleysAndNetPlay,
-                    notes: val,
-                  })
-                }
-                placeholder={''}
-                value={values.volleysAndNetPlay.notes}
-                error={false}
-                hideText={false}
-                multiline={true}
-              />
-
-              <Text style={styles.bigText}>Frequency of going to net</Text>
-              <View style={styles.radioContainer}>
-                <AppRadioButton
-                  checked={values.netFrequency === 'Rarely'}
-                  checkedColor={Colors.primary}
-                  label={'Rarely'}
-                  labelColor={'black'}
-                  onPress={() => setFieldValue('netFrequency', 'Rarely')}
-                />
-                <AppRadioButton
-                  checked={values.netFrequency === 'Sometimes'}
-                  checkedColor={Colors.primary}
-                  label={'Sometimes'}
-                  labelColor={'black'}
-                  onPress={() => setFieldValue('netFrequency', 'Sometimes')}
-                />
-                <AppRadioButton
-                  checked={values.netFrequency === 'Always'}
-                  checkedColor={Colors.primary}
-                  label={'Always'}
-                  labelColor={'black'}
-                  onPress={() => setFieldValue('netFrequency', 'Always')}
-                />
-              </View>
-              <Text style={styles.bigText}>
-                Share scout publicly to other users
-              </Text>
-              <View style={styles.radioContainer}>
-                <AppRadioButton
-                  checked={values.isShareable}
-                  checkedColor={Colors.primary}
-                  label={'Yes'}
-                  labelColor={'black'}
-                  onPress={() => setFieldValue('isShareable', true)}
-                />
-                <AppRadioButton
-                  checked={!values.isShareable}
-                  checkedColor={Colors.primary}
-                  label={'No'}
-                  labelColor={'black'}
-                  onPress={() => setFieldValue('isShareable', false)}
-                />
-                <View />
-              </View>
-              <Text style={styles.bigText}>General Comments</Text>
-              <AppInputLabel
-                labelColor={'black'}
-                label={''}
-                placeholder={''}
-                value={values.generalComments}
-                error={false}
-                height={70}
-                onChange={handleChange('generalComments')}
-                hideText={false}
-                multiline={true}
-              />
-              <View style={styles.radioContainer}>
-                <Text>
-                  <Icon
-                    name="check-circle"
-                    color={Colors.primary}
-                    size={20}
-                    onPress={handleSubmit}
+    <>
+      <AppPlayerList onPlayerPress={player => handleSelectedPlayer(player)} />
+      <View>
+        <ActivityIndicator
+          style={styles.loading}
+          animating={uploading}
+          color="gray"
+        />
+        <ScrollView
+          scrollEnabled={scrollEnabled}
+          contentContainerStyle={styles.container}>
+          <Formik
+            innerRef={formRef as any}
+            validationSchema={MatchNotesSchema}
+            initialValues={initialFormValues}
+            onSubmit={values => handleSubmitForm(values)}>
+            {({
+              handleSubmit,
+              handleChange,
+              values,
+              setFieldValue,
+              resetForm,
+            }) => (
+              <>
+                <View style={styles.radioContainer}>
+                  <AppRadioButton
+                    checked={values.useExistingPlayer as boolean}
+                    checkedColor={Colors.primary}
+                    label={'Existing player'}
+                    labelColor={'black'}
+                    onPress={() => setFieldValue('useExistingPlayer', true)}
                   />
-                  {'  '}
-                  <Text style={styles.actions}>
-                    {route.params?.type !== 'edit' ? 'Create' : 'Edit'}
+                  <AppRadioButton
+                    checked={!values.useExistingPlayer}
+                    checkedColor={Colors.primary}
+                    label={'New Player'}
+                    labelColor={'black'}
+                    onPress={() => setFieldValue('useExistingPlayer', false)}
+                  />
+                  <View />
+                </View>
+                {values.useExistingPlayer && (
+                  <TouchableOpacity
+                    onPress={handleSearchModalOpen}
+                    style={styles.selectPlayerContainer}>
+                    <Text style={styles.selectPlayerLeft}>Select a player</Text>
+                    <Icon
+                      style={styles.selectPlayerRight}
+                      name="chevron-down"
+                    />
+                  </TouchableOpacity>
+                )}
+                <AppInputLabel
+                  disabled={values.useExistingPlayer}
+                  height={38}
+                  label="Opponent First Name"
+                  labelColor="black"
+                  onChange={handleChange('opponentFirstName')}
+                  placeholder={''}
+                  value={values.opponentFirstName}
+                  error={false}
+                  hideText={false}
+                  multiline={false}
+                />
+                <AppInputLabel
+                  disabled={values.useExistingPlayer}
+                  height={38}
+                  label="Opponent Last Name"
+                  labelColor="black"
+                  onChange={handleChange('opponentLastName')}
+                  placeholder={''}
+                  value={values.opponentLastName}
+                  error={false}
+                  hideText={false}
+                  multiline={false}
+                />
+                <AppInputLabel
+                  height={38}
+                  label="Tournament Name"
+                  labelColor="black"
+                  onChange={handleChange('tournamentName')}
+                  placeholder={''}
+                  value={values.tournamentName}
+                  error={false}
+                  hideText={false}
+                  multiline={false}
+                />
+                <AppDatePicker
+                  date={new Date(values.tournamentDate) ?? new Date()}
+                  setDate={date => {
+                    setFieldValue('tournamentDate', date.getTime());
+                  }}
+                  label="Start Date"
+                  labelColor="black"
+                  value={values.tournamentDate}
+                />
+                <Text style={styles.instruction}>
+                  Rate each area of the opponent during the match 1-10
+                </Text>
+                <View style={styles.sliderLabel}>
+                  <Text style={styles.sliderLabelText}>Terrible</Text>
+                  <Text style={styles.sliderLabelText}>Fair</Text>
+                  <Text style={styles.sliderLabelText}>Excellent</Text>
+                </View>
+                <AppSlider
+                  label=""
+                  value={5.5}
+                  handleValueChange={() => null}
+                  disabled={true}
+                />
+                <Text style={styles.optionalNotes}>Notes are optional</Text>
+                <Text style={styles.bigText}>Serve</Text>
+                <AppSlider
+                  label="Rating"
+                  value={values.serve.rating}
+                  handleValueChange={val =>
+                    setFieldValue('serve', {...values.serve, rating: val})
+                  }
+                  disabled={false}
+                />
+                <AppInputLabel
+                  height={70}
+                  label="Notes"
+                  labelColor="black"
+                  onChange={val =>
+                    setFieldValue('serve', {...values.serve, notes: val})
+                  }
+                  placeholder={''}
+                  value={values.serve.notes}
+                  error={false}
+                  hideText={false}
+                  multiline={true}
+                />
+                <Text style={styles.bigText}>Forehand</Text>
+                <AppSlider
+                  label="Rating"
+                  value={values.forehand.rating}
+                  handleValueChange={val =>
+                    setFieldValue('forehand', {...values.forehand, rating: val})
+                  }
+                  disabled={false}
+                />
+                <AppInputLabel
+                  height={70}
+                  label="Notes"
+                  labelColor="black"
+                  onChange={val =>
+                    setFieldValue('forehand', {...values.forehand, notes: val})
+                  }
+                  placeholder={''}
+                  value={values.forehand.notes}
+                  error={false}
+                  hideText={false}
+                  multiline={true}
+                />
+
+                <Text style={styles.bigText}>Backhand</Text>
+                <AppSlider
+                  label="Rating"
+                  value={values.backhand.rating}
+                  handleValueChange={val =>
+                    setFieldValue('backhand', {...values.backhand, rating: val})
+                  }
+                  disabled={false}
+                />
+                <AppInputLabel
+                  height={70}
+                  label="Notes"
+                  labelColor="black"
+                  onChange={val =>
+                    setFieldValue('backhand', {...values.backhand, notes: val})
+                  }
+                  placeholder={''}
+                  value={values.backhand.notes}
+                  error={false}
+                  hideText={false}
+                  multiline={true}
+                />
+
+                <Text style={styles.bigText}>Movement</Text>
+                <AppSlider
+                  label="Rating"
+                  value={values.movement.rating}
+                  handleValueChange={val =>
+                    setFieldValue('movement', {...values.movement, rating: val})
+                  }
+                  disabled={false}
+                />
+                <AppInputLabel
+                  height={70}
+                  label="Notes"
+                  labelColor="black"
+                  onChange={val =>
+                    setFieldValue('movement', {...values.movement, notes: val})
+                  }
+                  placeholder={''}
+                  value={values.movement.notes}
+                  error={false}
+                  hideText={false}
+                  multiline={true}
+                />
+
+                <Text style={styles.bigText}>Volleys & Net Play</Text>
+                <AppSlider
+                  label="Rating"
+                  value={values.volleysAndNetPlay.rating}
+                  handleValueChange={val =>
+                    setFieldValue('volleysAndNetPlay', {
+                      ...values.volleysAndNetPlay,
+                      rating: val,
+                    })
+                  }
+                  disabled={false}
+                />
+                <AppInputLabel
+                  height={70}
+                  label="Notes"
+                  labelColor="black"
+                  onChange={val =>
+                    setFieldValue('volleysAndNetPlay', {
+                      ...values.volleysAndNetPlay,
+                      notes: val,
+                    })
+                  }
+                  placeholder={''}
+                  value={values.volleysAndNetPlay.notes}
+                  error={false}
+                  hideText={false}
+                  multiline={true}
+                />
+
+                <Text style={styles.bigText}>Frequency of going to net</Text>
+                <View style={styles.radioContainer}>
+                  <AppRadioButton
+                    checked={values.netFrequency === 'Rarely'}
+                    checkedColor={Colors.primary}
+                    label={'Rarely'}
+                    labelColor={'black'}
+                    onPress={() => setFieldValue('netFrequency', 'Rarely')}
+                  />
+                  <AppRadioButton
+                    checked={values.netFrequency === 'Sometimes'}
+                    checkedColor={Colors.primary}
+                    label={'Sometimes'}
+                    labelColor={'black'}
+                    onPress={() => setFieldValue('netFrequency', 'Sometimes')}
+                  />
+                  <AppRadioButton
+                    checked={values.netFrequency === 'Always'}
+                    checkedColor={Colors.primary}
+                    label={'Always'}
+                    labelColor={'black'}
+                    onPress={() => setFieldValue('netFrequency', 'Always')}
+                  />
+                </View>
+                <Text style={styles.bigText}>
+                  Share scout publicly to other users
+                </Text>
+                <View style={styles.radioContainer}>
+                  <AppRadioButton
+                    checked={values.isShareable}
+                    checkedColor={Colors.primary}
+                    label={'Yes'}
+                    labelColor={'black'}
+                    onPress={() => setFieldValue('isShareable', true)}
+                  />
+                  <AppRadioButton
+                    checked={!values.isShareable}
+                    checkedColor={Colors.primary}
+                    label={'No'}
+                    labelColor={'black'}
+                    onPress={() => setFieldValue('isShareable', false)}
+                  />
+                  <View />
+                </View>
+                <Text style={styles.bigText}>General Comments</Text>
+                <AppInputLabel
+                  labelColor={'black'}
+                  label={''}
+                  placeholder={''}
+                  value={values.generalComments}
+                  error={false}
+                  height={70}
+                  onChange={handleChange('generalComments')}
+                  hideText={false}
+                  multiline={true}
+                />
+                <View style={styles.radioContainer}>
+                  <Text>
+                    <Icon
+                      name="check-circle"
+                      color={Colors.primary}
+                      size={20}
+                      onPress={handleSubmit}
+                    />
+                    {'  '}
+                    <Text style={styles.actions}>
+                      {route.params?.type !== 'edit' ? 'Create' : 'Edit'}
+                    </Text>
                   </Text>
-                </Text>
-                <Text
-                  style={styles.actions}
-                  onPress={() => saveToLocalStorage(values)}>
-                  <Icon name="pocket" color={Colors.primary} size={20} />
-                  {'  '}
-                  <Text>Draft</Text>
-                </Text>
-                <Text style={styles.actions} onPress={() => resetForm()}>
-                  <Icon name="x-circle" color={Colors.primary} size={20} />
-                  {'  '}
-                  <Text>Clear</Text>
-                </Text>
-              </View>
-            </>
-          )}
-        </Formik>
-      </ScrollView>
-    </View>
+                  <Text
+                    style={styles.actions}
+                    onPress={() => saveToLocalStorage(values)}>
+                    <Icon name="pocket" color={Colors.primary} size={20} />
+                    {'  '}
+                    <Text>Draft</Text>
+                  </Text>
+                  <Text style={styles.actions} onPress={() => resetForm()}>
+                    <Icon name="x-circle" color={Colors.primary} size={20} />
+                    {'  '}
+                    <Text>Clear</Text>
+                  </Text>
+                </View>
+              </>
+            )}
+          </Formik>
+        </ScrollView>
+      </View>
+    </>
   );
 };
 
@@ -421,6 +501,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 20,
+  },
+  selectPlayerContainer: {
+    width: 270,
+    backgroundColor: '#e7e7e7',
+    height: 38,
+    borderWidth: 0.3,
+    borderColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
+  },
+  selectPlayerLeft: {
+    flex: 1,
+  },
+  selectPlayerRight: {
+    marginRight: 10,
+    color: Colors.primary,
   },
   sliderLabel: {
     flexDirection: 'row',

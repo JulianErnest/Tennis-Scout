@@ -4,13 +4,22 @@ import auth from '@react-native-firebase/auth';
 
 import {RootState} from '../../hooks';
 import {FormValues, InitialState, MatchDetails} from './MatchTypes';
+import {ratePlayer, setPlayerMatches} from '../players/playersSlice';
+
+export type Visibility = 'Public' | 'Private';
+
+const playerMatchesPath = (playerId: string, shareable: boolean) =>
+  db()
+    .collection('Player_Matches')
+    .doc(playerId)
+    .collection(shareable ? 'Public' : 'Private');
 
 export const submitMatchNotes = createAsyncThunk(
   'match/submit',
   async (params: FormValues, thunkApi) => {
     try {
       const state = thunkApi.getState() as RootState;
-      await db()
+      const match = await db()
         .collection('Matches')
         .add({
           ...params,
@@ -21,14 +30,27 @@ export const submitMatchNotes = createAsyncThunk(
           coachFirstName: state.meReducer.currentUser.coachFirstName,
           coachLastName: state.meReducer.currentUser.coachLastName,
         });
-      await db().collection('Coaches').doc(auth().currentUser?.uid).update({
-        lastOpponentLastName: params.opponentLastName,
-        lastOpponentTournament: params.tournamentName,
-      });
+      await Promise.all([
+        // Updates last note for the dashboard
+        await db().collection('Coaches').doc(auth().currentUser?.uid).update({
+          lastOpponentLastName: params.opponentLastName,
+          lastOpponentTournament: params.tournamentName,
+        }),
+        // Creates new reference to all of the player's matches
+        await playerMatchesPath(params.playerId, params.isShareable)
+          .doc(match.id)
+          .set({
+            matchId: true,
+          }),
+        await setPlayerMatches(params, match.id),
+        await ratePlayer(params),
+      ]);
       return true;
     } catch (error) {
       console.log('Error submit match notes matchinputslice', error);
-      return false;
+      return thunkApi.rejectWithValue(
+        'Unable to create match note at the moment',
+      );
     }
   },
 );
