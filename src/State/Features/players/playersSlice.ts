@@ -9,14 +9,6 @@ import {RootState} from '../../hooks';
 import {getUserId} from '../me/meSlice';
 import {FormValues} from '../match/MatchTypes';
 
-const coachPlayerNotesPath = (coachId: string, opponentId: string) =>
-  db()
-    .collection('Coach_Player_Notes')
-    .doc(coachId)
-    .collection('Opponents')
-    .doc(opponentId)
-    .collection('Matches');
-
 const PLAYERLIST_FILENAME = 'playerList.csv';
 
 const LAST_RETRIEVE_TIMESTAMP_KEY = 'LASTRETRIEVETIMESTAMP';
@@ -149,15 +141,6 @@ export async function removeCustomPlayersFromLocal() {
   } catch (e) {
     console.log('Error removing custom players from local', e);
   }
-}
-
-// Creates new reference to all of the matches of the coach against a player
-export async function setPlayerMatches(params: FormValues, id: string) {
-  try {
-    await coachPlayerNotesPath(getUserId(), params.playerId).doc(id).set({
-      matchId: true,
-    });
-  } catch (e) {}
 }
 
 // Create new rating entry

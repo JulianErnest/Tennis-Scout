@@ -2,15 +2,13 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import auth from '@react-native-firebase/auth';
 
-import {Colors} from '../Styles/GlobalStyles';
-import {useAppDispatch, useAppSelector} from '../State/hooks';
-import {selectUserDetails} from '../State/Features/me/meSlice';
-import AppDashboardLink from '../Components/AppDashboardLink';
-import {
-  fetchMatchNotes,
-  selectMatchNotes,
-} from '../State/Features/match/matchSlice';
-import {setAccountDetails} from '../State/Features/account/accountSlice';
+import {Colors} from '../../../Styles/GlobalStyles';
+import {useAppDispatch, useAppSelector} from '../../../State/hooks';
+import {selectUserDetails} from '../../../State/Features/me/meSlice';
+import AppDashboardLink from '../../../Components/AppDashboardLink';
+import {selectMatchNotes} from '../../../State/Features/match/matchSlice';
+import {setAccountDetails} from '../../../State/Features/account/accountSlice';
+import {getCoachNotes} from '../../../State/Features/match/MatchSliceAsyncThunks';
 
 const CoachDashboard = () => {
   const dispatch = useAppDispatch();
@@ -18,7 +16,7 @@ const CoachDashboard = () => {
   const uid = auth().currentUser?.uid;
   const matchNotes = useAppSelector(selectMatchNotes);
   useEffect(() => {
-    dispatch(fetchMatchNotes(uid as string));
+    dispatch(getCoachNotes());
     dispatch(setAccountDetails(userDetails));
   }, [dispatch, uid, userDetails]);
   return (
@@ -43,10 +41,10 @@ const CoachDashboard = () => {
           ) : (
             <>
               <Text style={styles.versusName}>
-                {`vs ${userDetails.lastOpponentLastName}`}
+                {`vs ${matchNotes[0].opponentLastName}`}
               </Text>
               <Text style={styles.versusTournament}>
-                {userDetails.lastOpponentTournament ?? ''}
+                {matchNotes[0].tournamentName ?? ''}
               </Text>
             </>
           )}
@@ -66,7 +64,7 @@ const CoachDashboard = () => {
             navprops={{coachId: uid}}
             icon={'database'}
             label={'View All Notes'}
-            route={'AllNotes'}
+            route={'AllNotesStack'}
           />
         </View>
       </View>
@@ -76,7 +74,7 @@ const CoachDashboard = () => {
             navprops={{}}
             icon={'search'}
             label={'Search Opponent'}
-            route={'SearchOpponent'}
+            route={'SearchOpponentStack'}
           />
         </View>
         <View style={styles.column}>

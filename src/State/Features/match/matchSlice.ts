@@ -1,98 +1,10 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import db from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
+import {createSlice} from '@reduxjs/toolkit';
 
 import {RootState} from '../../hooks';
-import {FormValues, InitialState, MatchDetails} from './MatchTypes';
-import {ratePlayer, setPlayerMatches} from '../players/playersSlice';
+import {getCoachNotes} from './MatchSliceAsyncThunks';
+import {InitialState, MatchDetails} from './MatchTypes';
 
 export type Visibility = 'Public' | 'Private';
-
-const playerMatchesPath = (playerId: string, shareable: boolean) =>
-  db()
-    .collection('Player_Matches')
-    .doc(playerId)
-    .collection(shareable ? 'Public' : 'Private');
-
-export const submitMatchNotes = createAsyncThunk(
-  'match/submit',
-  async (params: FormValues, thunkApi) => {
-    try {
-      const state = thunkApi.getState() as RootState;
-      const match = await db()
-        .collection('Matches')
-        .add({
-          ...params,
-          playerFirstName: state.meReducer.currentUser.currentFirstName,
-          playerLastName: state.meReducer.currentUser.currentLastName,
-          dateCreated: Date.now(),
-          coachId: auth().currentUser?.uid,
-          coachFirstName: state.meReducer.currentUser.coachFirstName,
-          coachLastName: state.meReducer.currentUser.coachLastName,
-        });
-      await Promise.all([
-        // Updates last note for the dashboard
-        await db().collection('Coaches').doc(auth().currentUser?.uid).update({
-          lastOpponentLastName: params.opponentLastName,
-          lastOpponentTournament: params.tournamentName,
-        }),
-        // Creates new reference to all of the player's matches
-        await playerMatchesPath(params.playerId, params.isShareable)
-          .doc(match.id)
-          .set({
-            matchId: true,
-          }),
-        await setPlayerMatches(params, match.id),
-        await ratePlayer(params),
-      ]);
-      return true;
-    } catch (error) {
-      console.log('Error submit match notes matchinputslice', error);
-      return thunkApi.rejectWithValue(
-        'Unable to create match note at the moment',
-      );
-    }
-  },
-);
-
-export const editMatchNotes = createAsyncThunk(
-  'match/edit',
-  async (params: MatchDetails, thunkApi) => {
-    try {
-      const state = thunkApi.getState() as RootState;
-      await db().collection('Matches').doc(params.matchId).update(params);
-      if (state.matchReducer.matchNotes[0].matchId === params.matchId) {
-        await db().collection('Coaches').doc(params.coachId).update({
-          lastOpponentLastName: params.opponentLastName,
-          lastOpponentTournament: params.tournamentName,
-        });
-      }
-      return true;
-    } catch (e) {
-      console.log('Error editting match notes', e);
-      return false;
-    }
-  },
-);
-
-export const fetchMatchNotes = createAsyncThunk(
-  'match/fetch',
-  async (coachId: string) => {
-    try {
-      const data = await db()
-        .collection('Matches')
-        .where('coachId', '==', coachId)
-        .get();
-      const notes: MatchDetails[] = [];
-      data.docs.forEach(x =>
-        notes.push({...x.data(), matchId: x.id} as MatchDetails),
-      );
-      return notes;
-    } catch (e) {
-      console.log('Error fetching notes matchSlice', e);
-    }
-  },
-);
 
 const initialState: InitialState = {
   enableScroll: true,
@@ -139,13 +51,10 @@ export const matchSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(fetchMatchNotes.fulfilled, (state, {payload}) => {
-      if (!state.hasFetchedNotes) {
-        state.hasFetchedNotes = true;
-      }
-      state.matchNotes = payload?.sort(
-        (a, b) => a.dateCreated - b.dateCreated,
-      ) as MatchDetails[];
+    builder.addCase(getCoachNotes.fulfilled, (state, action) => {
+      state.matchNotes = action.payload.sort(
+        (a, b) => b.dateCreated - a.dateCreated,
+      );
     });
   },
 });

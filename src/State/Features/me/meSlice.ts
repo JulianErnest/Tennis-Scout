@@ -5,7 +5,7 @@ import Toast from 'react-native-toast-message';
 
 import {RootState} from '../../hooks';
 import {getUserType, setUserType} from '../../../Helpers/StorageFunctions';
-import {ProfileInput} from '../../../Screens/CreateProfile';
+import {ProfileInput} from '../../../Screens/Coach/Common/CreateProfile';
 import {ADMIN} from './../../../secret';
 import {getCustomPlayers} from '../players/playersSlice';
 

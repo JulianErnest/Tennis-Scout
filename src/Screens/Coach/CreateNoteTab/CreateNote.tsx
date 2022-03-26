@@ -5,49 +5,42 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import * as Yup from 'yup';
-import AppInputLabel from '../Components/AppInputLabel';
+import AppInputLabel from '../../../Components/AppInputLabel';
 import {Formik} from 'formik';
 import Icon from 'react-native-vector-icons/Feather';
 import Toast from 'react-native-toast-message';
-import auth from '@react-native-firebase/auth';
 import {ActivityIndicator} from 'react-native-paper';
 
-import {
-  editMatchNotes,
-  selectEnableScroll,
-  submitMatchNotes,
-  fetchMatchNotes,
-} from '../State/Features/match/matchSlice';
-import {useAppDispatch, useAppSelector} from '../State/hooks';
-import AppSlider from '../Components/AppSlider';
-import AppRadioButton from '../Components/AppRadioButton';
-import {Colors} from '../Styles/GlobalStyles';
+import {selectEnableScroll} from '../../../State/Features/match/matchSlice';
+import {useAppDispatch, useAppSelector} from '../../../State/hooks';
+import AppSlider from '../../../Components/AppSlider';
+import AppRadioButton from '../../../Components/AppRadioButton';
+import {Colors} from '../../../Styles/GlobalStyles';
 import {
   deleteMatchNotes,
   getMatchNotes,
   saveMatchNotes,
-} from '../Helpers/StorageFunctions';
-import AppDatePicker from '../Components/AppDatePicker';
-import {FormValues, MatchDetails} from '../State/Features/match/MatchTypes';
-import {initialFormValues} from '../State/Features/match/MatchConstants';
-import {getLoggedInUser, selectUserType} from '../State/Features/me/meSlice';
+} from '../../../Helpers/StorageFunctions';
+import AppDatePicker from '../../../Components/AppDatePicker';
+import {FormValues} from '../../../State/Features/match/MatchTypes';
+import {initialFormValues} from '../../../State/Features/match/MatchConstants';
+import {getLoggedInUser, getUserId} from '../../../State/Features/me/meSlice';
 import {
   generatePlayerId,
   PlayerDataList,
   saveCustomPlayer,
   setSearchPlayerModalVisibility,
-} from '../State/Features/players/playersSlice';
-import AppPlayerList from '../Components/AppPlayerList';
+} from '../../../State/Features/players/playersSlice';
+import AppPlayerList from '../../../Components/AppPlayerList';
+import {submitMatchNotes} from '../../../State/Features/match/MatchSliceAsyncThunks';
 
-const MatchNotes = ({route}: any) => {
+const CreateNote = () => {
   const [uploading, setUploading] = useState(false);
   const dispatch = useAppDispatch();
   const scrollEnabled = useAppSelector(selectEnableScroll);
-  const userType = useAppSelector(selectUserType);
   const formRef = useRef<any>();
-
   const MatchNotesSchema = Yup.object().shape({
     opponentFirstName: Yup.string().required('First name is required'),
     opponentLastName: Yup.string().required('Last name is required'),
@@ -71,33 +64,23 @@ const MatchNotes = ({route}: any) => {
   }
 
   async function handleSubmitForm(values: FormValues) {
-    console.log('before ye', formRef.current.values);
     try {
       if (!uploading) {
         setUploading(true);
         let sent;
-        if (route.params?.type === 'edit') {
-          sent = await dispatch(
-            editMatchNotes(values as MatchDetails),
-          ).unwrap();
-        } else {
-          if (!values.playerId) {
-            const customId = generatePlayerId();
-            values.playerId = customId;
-            formRef.current.setFieldValue('playerId', customId);
-          }
-          console.log('after yeye', formRef.current.values);
-          if (!values.useExistingPlayer) {
-            await saveCustomPlayer(values);
-          }
-          sent = await dispatch(submitMatchNotes(values)).unwrap();
+        if (!values.playerId) {
+          const customId = generatePlayerId();
+          values.playerId = customId;
+          formRef.current.setFieldValue('playerId', customId);
         }
-        if (userType === 'coach') {
-          const uid = auth().currentUser?.uid as string;
-          await dispatch(fetchMatchNotes(uid));
-          await dispatch(getLoggedInUser(uid));
+        sent = await dispatch(submitMatchNotes(values)).unwrap();
+        if (!values.useExistingPlayer) {
+          await saveCustomPlayer(values);
         }
-        formRef.current.resetForm();
+        if (sent) {
+          await getMatchNotes();
+        }
+        await dispatch(getLoggedInUser(getUserId()));
         await deleteMatchNotes();
         setUploading(false);
         Toast.show({
@@ -108,6 +91,7 @@ const MatchNotes = ({route}: any) => {
           visibilityTime: 3000,
           autoHide: true,
         });
+        formRef.current.resetForm();
       }
     } catch (e) {
       console.log('Error submitting form', e);
@@ -124,23 +108,6 @@ const MatchNotes = ({route}: any) => {
       autoHide: true,
     });
   }
-
-  useEffect(() => {
-    (async () => {
-      const matchNotes = await getMatchNotes();
-      const type = route.params?.type;
-      console.log(matchNotes);
-      if (type === 'edit') {
-        formRef.current.setValues(route.params);
-      } else {
-        if (!matchNotes) {
-          formRef.current.resetForm();
-        } else {
-          formRef.current.setValues(matchNotes);
-        }
-      }
-    })();
-  }, [route.params]);
 
   return (
     <>
@@ -439,9 +406,7 @@ const MatchNotes = ({route}: any) => {
                       onPress={handleSubmit}
                     />
                     {'  '}
-                    <Text style={styles.actions}>
-                      {route.params?.type !== 'edit' ? 'Create' : 'Edit'}
-                    </Text>
+                    <Text style={styles.actions}>Create</Text>
                   </Text>
                   <Text
                     style={styles.actions}
@@ -465,7 +430,7 @@ const MatchNotes = ({route}: any) => {
   );
 };
 
-export default MatchNotes;
+export default CreateNote;
 
 const styles = StyleSheet.create({
   actions: {

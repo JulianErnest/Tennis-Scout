@@ -6,29 +6,29 @@ import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/Feather';
 
-import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
-import {useAppDispatch, useAppSelector} from '../State/hooks';
+import {Colors, GlobalStyles} from '../../../Styles/GlobalStyles';
+import {useAppDispatch, useAppSelector} from '../../../State/hooks';
 import {
   AccountDetails,
   resetAccount,
   selectUserAccountDetails,
   updateAccount,
-} from '../State/Features/account/accountSlice';
-import AppDatePicker from '../Components/AppDatePicker';
-import AppErrorText from '../Components/AppErrorText';
-import AppInputLabel from '../Components/AppInputLabel';
-import AppRadioButton from '../Components/AppRadioButton';
-import {InitialValues} from '../State/Features/account/AccountConstants';
+} from '../../../State/Features/account/accountSlice';
+import AppDatePicker from '../../../Components/AppDatePicker';
+import AppErrorText from '../../../Components/AppErrorText';
+import AppInputLabel from '../../../Components/AppInputLabel';
+import AppRadioButton from '../../../Components/AppRadioButton';
+import {InitialValues} from '../../../State/Features/account/AccountConstants';
 import {
   getLoggedInUser,
   PreviousPlayers,
   resetMe,
-} from '../State/Features/me/meSlice';
-import {resetApplications} from '../State/Features/applications/applicationsSlice';
-import {resetMatch} from '../State/Features/match/matchSlice';
-import {deleteUserType} from '../Helpers/StorageFunctions';
-import AppPreviousPlayersAccount from '../Components/AppPreviousPlayersAccount';
-import {removeCustomPlayersFromLocal} from '../State/Features/players/playersSlice';
+} from '../../../State/Features/me/meSlice';
+import {resetApplications} from '../../../State/Features/applications/applicationsSlice';
+import {resetMatch} from '../../../State/Features/match/matchSlice';
+import {deleteUserType} from '../../../Helpers/StorageFunctions';
+import AppPreviousPlayersAccount from '../../../Components/AppPreviousPlayersAccount';
+import {removeCustomPlayersFromLocal} from '../../../State/Features/players/playersSlice';
 
 const UpdateAccount = ({route}: any) => {
   const dispatch = useAppDispatch();

@@ -1,55 +1,38 @@
-import {FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect} from 'react';
 import Icon from 'react-native-vector-icons/Feather';
-import auth from '@react-native-firebase/auth';
-import {debounce} from 'lodash';
 
-import {useAppDispatch, useAppSelector} from '../State/hooks';
+import {useAppDispatch, useAppSelector} from '../../../State/hooks';
+import {Colors} from '../../../Styles/GlobalStyles';
+import {getFormattedDate} from '../../../Helpers/DateFunctions';
+import {MatchDetails} from '../../../State/Features/match/MatchTypes';
+import {navigate} from '../../../Navigation/NavigationUtils';
 import {
-  fetchMatchNotes,
-  selectFilteredNotes,
-  selectHasFetchedNotes,
-  setFilteredNotes,
-} from '../State/Features/match/matchSlice';
-import {Colors} from '../Styles/GlobalStyles';
-import {getFormattedDate} from '../Helpers/DateFunctions';
-import {MatchDetails} from '../State/Features/match/MatchTypes';
-import {navigate} from '../Navigation/NavigationUtils';
+  getAllPublicPlayerNotes,
+  selectPublicPlayerNotes,
+} from '../../../State/Features/players/searchSlice';
 
-const SearchOpponent = () => {
+const AllPlayerNotes = ({route}: any) => {
+  console.log(route);
   const dispatch = useAppDispatch();
-  const hasFetchedd = useAppSelector(selectHasFetchedNotes);
-  const filtered = useAppSelector(selectFilteredNotes);
-  const [filter, setFilter] = useState('');
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounceLoadData = useCallback(debounce(fetchData, 1000), []);
+  const notes = useAppSelector(selectPublicPlayerNotes);
 
   useEffect(() => {
-    if (!hasFetchedd) {
-      dispatch(fetchMatchNotes(auth().currentUser?.uid as string));
-    }
-    debounceLoadData(filter);
-  }, [filter, debounceLoadData, hasFetchedd, dispatch]);
-
-  function fetchData(keywords: string) {
-    dispatch(setFilteredNotes(keywords));
-  }
+    dispatch(getAllPublicPlayerNotes(route.params.player.player_id));
+  }, [dispatch, route.params.player.player_id]);
 
   function handleViewDetails(item: MatchDetails) {
-    navigate('MatchNotes', {...item, type: 'edit'});
+    navigate('EditNote', {...item, type: 'edit'});
   }
 
   return (
-    <View>
-      <TextInput
-        value={filter}
-        style={styles.search}
-        onChangeText={t => setFilter(t)}
-      />
+    <View style={styles.container}>
+      <Text style={styles.mainText}>
+        All Public notes of player: {route.params.player.player_full_name}
+      </Text>
       <FlatList
         style={styles.list}
-        data={filtered}
+        data={notes}
         keyExtractor={data => data.dateCreated.toString()}
         renderItem={({item, index}) => (
           <View key={index} style={styles.previewContainer}>
@@ -79,9 +62,12 @@ const SearchOpponent = () => {
   );
 };
 
-export default SearchOpponent;
+export default AllPlayerNotes;
 
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+  },
   contentText: {
     fontWeight: '700',
     fontSize: 17,
@@ -106,7 +92,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   list: {
-    marginBottom: 150,
+    paddingBottom: 150,
+  },
+  mainText: {
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 20,
+    fontWeight: 'bold',
+    width: 250,
   },
   previewContainer: {
     width: 300,

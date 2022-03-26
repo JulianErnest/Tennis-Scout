@@ -5,19 +5,22 @@ import Icon from 'react-native-vector-icons/Feather';
 import auth from '@react-native-firebase/auth';
 import {Formik} from 'formik';
 
-import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
-import AppInputLabel from '../Components/AppInputLabel';
+import {Colors, GlobalStyles} from '../../../Styles/GlobalStyles';
+import AppInputLabel from '../../../Components/AppInputLabel';
 import {Button, Divider} from 'react-native-paper';
-import AppRadioButton from '../Components/AppRadioButton';
-import AppDatePicker from '../Components/AppDatePicker';
-import {createProfile, PreviousPlayers} from '../State/Features/me/meSlice';
-import AppPreviousPlayers from '../Components/AppPreviousPlayers';
-import AppErrorText from '../Components/AppErrorText';
-import {useAppDispatch, useAppSelector} from '../State/hooks';
+import AppRadioButton from '../../../Components/AppRadioButton';
+import AppDatePicker from '../../../Components/AppDatePicker';
+import {
+  createProfile,
+  PreviousPlayers,
+} from '../../../State/Features/me/meSlice';
+import AppPreviousPlayers from '../../../Components/AppPreviousPlayers';
+import AppErrorText from '../../../Components/AppErrorText';
+import {useAppDispatch, useAppSelector} from '../../../State/hooks';
 import {
   getUserDetails,
   selectUserAccountDetails,
-} from '../State/Features/account/accountSlice';
+} from '../../../State/Features/account/accountSlice';
 
 export type ProfileInput = {
   coachFirstName: string;

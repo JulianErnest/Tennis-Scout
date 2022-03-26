@@ -11,13 +11,13 @@ import * as Yup from 'yup';
 import {Button} from 'react-native-paper';
 import Toast from 'react-native-toast-message';
 
-import {Colors} from '../Styles/GlobalStyles';
-import AppInputLabel from '../Components/AppInputLabel';
-import {navigate} from '../Navigation/NavigationUtils';
-import {useAppDispatch} from '../State/hooks';
-import {register, RegisterParams} from '../State/Features/me/meSlice';
+import {Colors} from '../../Styles/GlobalStyles';
+import AppInputLabel from '../../Components/AppInputLabel';
+import {navigate} from '../../Navigation/NavigationUtils';
+import {useAppDispatch} from '../../State/hooks';
+import {register, RegisterParams} from '../../State/Features/me/meSlice';
 import {Formik} from 'formik';
-import AppErrorText from '../Components/AppErrorText';
+import AppErrorText from '../../Components/AppErrorText';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -95,7 +95,7 @@ const Login = () => {
             <>
               <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Image
-                  source={require('../Assets/logo-full.png')}
+                  source={require('../../Assets/logo-full.png')}
                   style={styles.image}
                 />
                 <AppInputLabel

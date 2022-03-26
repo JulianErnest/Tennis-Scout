@@ -5,7 +5,7 @@ import {useAppSelector} from '../State/hooks';
 import {selectFetchingUser, selectUserType} from '../State/Features/me/meSlice';
 import AdminNavigation from './AdminNavigation';
 import UnauthenticatedNavigation from './UnauthenticatedNavigation';
-import Splashscreen from '../Screens/Splashscreen';
+import Splashscreen from '../Screens/Unauthenticated/Splashscreen';
 import CoachNavigation from './CoachNavigation';
 
 const MainNavigator = () => {

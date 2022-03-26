@@ -3,6 +3,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import ReactNativeModal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
 import {debounce} from 'lodash';
+import {TextInput} from 'react-native-paper';
 
 import {useAppDispatch, useAppSelector} from '../State/hooks';
 import {
@@ -12,7 +13,6 @@ import {
   setFilteredPlayers,
   setSearchPlayerModalVisibility,
 } from '../State/Features/players/playersSlice';
-import {TextInput} from 'react-native-paper';
 import {Colors} from '../Styles/GlobalStyles';
 
 type AppPlayerListProps = {

@@ -5,16 +5,16 @@ import Toast from 'react-native-toast-message';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 
-import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
-import AppInputLabel from '../Components/AppInputLabel';
-import {navigate} from '../Navigation/NavigationUtils';
-import {login} from '../State/Features/me/meSlice';
-import {useAppDispatch} from '../State/hooks';
-import AppErrorText from '../Components/AppErrorText';
+import {Colors, GlobalStyles} from '../../Styles/GlobalStyles';
+import AppInputLabel from '../../Components/AppInputLabel';
+import {navigate} from '../../Navigation/NavigationUtils';
+import {login} from '../../State/Features/me/meSlice';
+import {useAppDispatch} from '../../State/hooks';
+import AppErrorText from '../../Components/AppErrorText';
 import {
   getSavedUserCredentials,
   saveUserCredentials,
-} from '../Helpers/StorageFunctions';
+} from '../../Helpers/StorageFunctions';
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -70,7 +70,10 @@ const Login = () => {
 
   return (
     <View style={GlobalStyles.centerView}>
-      <Image source={require('../Assets/logo-full.png')} style={styles.image} />
+      <Image
+        source={require('../../Assets/logo-full.png')}
+        style={styles.image}
+      />
       <Formik
         innerRef={formRef as any}
         initialValues={fields}

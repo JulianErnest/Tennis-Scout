@@ -1,16 +1,16 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
-import AppDashboardLink from '../Components/AppDashboardLink';
+import {Colors, GlobalStyles} from '../../Styles/GlobalStyles';
+import AppDashboardLink from '../../Components/AppDashboardLink';
 import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/Feather';
 
-import {useAppDispatch} from '../State/hooks';
-import {deleteUserType} from '../Helpers/StorageFunctions';
-import {resetAccount} from '../State/Features/account/accountSlice';
-import {resetApplications} from '../State/Features/applications/applicationsSlice';
-import {resetMatch} from '../State/Features/match/matchSlice';
-import {resetMe} from '../State/Features/me/meSlice';
+import {useAppDispatch} from '../../State/hooks';
+import {deleteUserType} from '../../Helpers/StorageFunctions';
+import {resetAccount} from '../../State/Features/account/accountSlice';
+import {resetApplications} from '../../State/Features/applications/applicationsSlice';
+import {resetMatch} from '../../State/Features/match/matchSlice';
+import {resetMe} from '../../State/Features/me/meSlice';
 
 const AdminDashboard = () => {
   const dispatch = useAppDispatch();

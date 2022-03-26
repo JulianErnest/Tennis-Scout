@@ -2,16 +2,16 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import db from '@react-native-firebase/firestore';
 
-import {useAppDispatch, useAppSelector} from '../State/hooks';
+import {useAppDispatch, useAppSelector} from '../../State/hooks';
 import {
   AccountDetails,
   selectAllCoaches,
   setAccountDetails,
   setAllCoaches,
-} from '../State/Features/account/accountSlice';
-import {Colors} from '../Styles/GlobalStyles';
+} from '../../State/Features/account/accountSlice';
+import {Colors} from '../../Styles/GlobalStyles';
 import {Button} from 'react-native-paper';
-import {navigate} from '../Navigation/NavigationUtils';
+import {navigate} from '../../Navigation/NavigationUtils';
 
 const AllCoaches = () => {
   const dispatch = useAppDispatch();

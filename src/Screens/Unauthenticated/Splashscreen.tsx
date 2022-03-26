@@ -2,18 +2,18 @@ import React, {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import auth from '@react-native-firebase/auth';
 
-import {useAppDispatch} from '../State/hooks';
+import {useAppDispatch} from '../../State/hooks';
 import {
   checkUser,
   getLoggedInUser,
   setFetchingUser,
-} from '../State/Features/me/meSlice';
+} from '../../State/Features/me/meSlice';
 import {
   getCustomPlayersFromLocal,
   getPlayerCSV,
   retrievePlayersFromStorage,
   shouldGetPlayersCSV,
-} from '../State/Features/players/playersSlice';
+} from '../../State/Features/players/playersSlice';
 
 const Splashscreen = () => {
   const dispatch = useAppDispatch();

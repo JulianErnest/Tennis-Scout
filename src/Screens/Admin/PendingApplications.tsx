@@ -10,9 +10,9 @@ import {
   selectApplications,
   acceptApplication,
   rejectApplication,
-} from '../State/Features/applications/applicationsSlice';
-import {useAppDispatch, useAppSelector} from '../State/hooks';
-import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
+} from '../../State/Features/applications/applicationsSlice';
+import {useAppDispatch, useAppSelector} from '../../State/hooks';
+import {Colors, GlobalStyles} from '../../Styles/GlobalStyles';
 
 const PendingApplications = () => {
   const dispatch = useAppDispatch();

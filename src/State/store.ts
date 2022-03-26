@@ -4,6 +4,7 @@ import applicationsReducer from './Features/applications/applicationsSlice';
 import matchReducer from './Features/match/matchSlice';
 import accountReducer from './Features/account/accountSlice';
 import playerReducer from './Features/players/playersSlice';
+import searchReducer from './Features/players/searchSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     matchReducer,
     accountReducer,
     playerReducer,
+    searchReducer,
   },
 });
 

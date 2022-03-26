@@ -3,15 +3,15 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Feather';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import AdminDashboard from '../Screens/AdminDashboard';
+import AdminDashboard from '../Screens/Admin/AdminDashboard';
 import HeaderLeft from '../Components/HeaderLeft';
 import {Colors} from '../Styles/GlobalStyles';
-import PendingApplications from '../Screens/PendingApplications';
-import AllMatches from '../Screens/AllMatches';
-import AllCoaches from '../Screens/AllCoaches';
-import UpdateAccount from '../Screens/UpdateAccount';
-import AllNotes from '../Screens/AllNotes';
-import MatchNotes from '../Screens/MatchNotes';
+import PendingApplications from '../Screens/Admin/PendingApplications';
+import AllMatches from '../Screens/Admin/AllMatches';
+import AllCoaches from '../Screens/Admin/AllCoaches';
+import UpdateAccount from '../Screens/Coach/AccountTab/UpdateAccount';
+import AllNotes from '../Screens/Coach/AllNotesTab/AllNotes';
+import MatchNotes from '../Screens/Coach/CreateNoteTab/CreateNote';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();

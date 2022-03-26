@@ -2,9 +2,9 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 
-import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
+import {Colors, GlobalStyles} from '../../Styles/GlobalStyles';
 import {Button} from 'react-native-paper';
-import {navigate} from '../Navigation/NavigationUtils';
+import {navigate} from '../../Navigation/NavigationUtils';
 
 const Confirm = () => {
   function handleConfirm() {

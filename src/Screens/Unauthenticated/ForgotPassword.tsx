@@ -3,9 +3,9 @@ import React, {useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 
-import {Colors, GlobalStyles} from '../Styles/GlobalStyles';
-import {useAppDispatch} from '../State/hooks';
-import {resetPassword} from '../State/Features/me/meSlice';
+import {Colors, GlobalStyles} from '../../Styles/GlobalStyles';
+import {useAppDispatch} from '../../State/hooks';
+import {resetPassword} from '../../State/Features/me/meSlice';
 
 const ForgotPassword = () => {
   const dispatch = useAppDispatch();
