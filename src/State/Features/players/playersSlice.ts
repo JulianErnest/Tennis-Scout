@@ -16,21 +16,38 @@ const coachPlayerNotesPath = (coachId: string, opponentId: string) =>
     .collection('Opponents')
     .doc(opponentId)
     .collection('Matches');
+
 const PLAYERLIST_FILENAME = 'playerList.csv';
-const playerRatingsPath = db().collection('Player_Rating');
+
 const LAST_RETRIEVE_TIMESTAMP_KEY = 'LASTRETRIEVETIMESTAMP';
 const STORED_PLAYERS_KEY = 'PLAYERLIST';
+const STORED_CUSTOM_PLAYERS_KEY = 'CUSTOM_PLAYERLIST';
+
+const playerRatingsPath = db().collection('Player_Rating');
 const last_upload_timestamp_collection = db()
   .collection('Player')
   .doc('timestamp');
+const coachCustomPlayers = (coachId: string) => {
+  return db()
+    .collection('Coach_Custom_Players')
+    .doc(coachId)
+    .collection('Players');
+};
 
 export type PlayerDataList = {
-  ranking_date: string;
-  rank: string;
+  ranking_date?: string;
+  rank?: string;
   player_id: string;
   player_first_name: string;
   player_surname: string;
   player_full_name: string;
+};
+
+export type SavedCustomPlayer = {
+  player_first_name: string;
+  player_surname: string;
+  player_full_name: string;
+  player_id: string;
 };
 
 const PlayerDataListHeaders = [
@@ -41,6 +58,98 @@ const PlayerDataListHeaders = [
   'player_surname',
   'player_full_name',
 ];
+
+// Generate custom player id
+export function generatePlayerId() {
+  return `C${Math.trunc(Math.random() * 100000)}`;
+}
+
+export async function saveCustomPlayer(params: FormValues) {
+  const newCustomPlayer = {
+    player_first_name: params.opponentFirstName,
+    player_surname: params.opponentLastName,
+    player_full_name: `${params.opponentFirstName} ${params.opponentLastName}`,
+    player_id: params.playerId,
+  } as SavedCustomPlayer;
+  console.log('New custom player', newCustomPlayer);
+  try {
+    await coachCustomPlayers(getUserId())
+      .doc(params.playerId)
+      .set(newCustomPlayer);
+    const getSavedCustom = await EncryptedStorage.getItem(
+      STORED_CUSTOM_PLAYERS_KEY,
+    );
+    if (getSavedCustom) {
+      const customPlayers = JSON.parse(getSavedCustom) as SavedCustomPlayer[];
+      customPlayers.push(newCustomPlayer);
+      await EncryptedStorage.setItem(
+        STORED_CUSTOM_PLAYERS_KEY,
+        JSON.stringify(customPlayers),
+      );
+    } else {
+      await EncryptedStorage.setItem(
+        STORED_CUSTOM_PLAYERS_KEY,
+        JSON.stringify([newCustomPlayer]),
+      );
+    }
+  } catch (e) {
+    console.log('Error saving custom player', e);
+  }
+}
+
+export const getCustomPlayers = createAsyncThunk(
+  'playerSlice/getCustomPlayers',
+  async (_, thunkApi) => {
+    try {
+      const getCustomPlayersDB = await coachCustomPlayers(getUserId()).get();
+      let arr: SavedCustomPlayer[] = [];
+      for (const doc of getCustomPlayersDB.docs) {
+        const customPlayer = doc.data();
+        const savedCustom: SavedCustomPlayer = {
+          player_first_name: customPlayer.player_first_name,
+          player_surname: customPlayer.player_surname,
+          player_full_name: customPlayer.player_full_name,
+          player_id: customPlayer.player_id,
+        };
+        arr.push(savedCustom);
+      }
+      EncryptedStorage.setItem(STORED_CUSTOM_PLAYERS_KEY, JSON.stringify(arr));
+      thunkApi.dispatch(setCustomPlayers(arr));
+    } catch (e) {
+      console.log('Error getting custom players', e);
+    }
+  },
+);
+
+export const getCustomPlayersFromLocal = createAsyncThunk(
+  'playerSlice/getCustomPlayersLocal',
+  async (_, thunkApi) => {
+    try {
+      const getStored = await EncryptedStorage.getItem(
+        STORED_CUSTOM_PLAYERS_KEY,
+      );
+      if (getStored) {
+        const stored = JSON.parse(getStored);
+        thunkApi.dispatch(setCustomPlayers(stored));
+      }
+    } catch (e) {
+      console.log('Error getting custom players from local', e);
+    }
+  },
+);
+
+export async function removeCustomPlayersFromLocal() {
+  try {
+    const storedPlayers = await EncryptedStorage.getItem(
+      STORED_CUSTOM_PLAYERS_KEY,
+    );
+    if (storedPlayers) {
+      EncryptedStorage.removeItem(STORED_CUSTOM_PLAYERS_KEY);
+    }
+  } catch (e) {
+    console.log('Error removing custom players from local', e);
+  }
+}
 
 // Creates new reference to all of the matches of the coach against a player
 export async function setPlayerMatches(params: FormValues, id: string) {
@@ -152,6 +261,13 @@ export const retrievePlayersFromStorage = createAsyncThunk(
       const getStoredPlayers = await EncryptedStorage.getItem(
         STORED_PLAYERS_KEY,
       );
+      const getCustomPlayersStorage = await EncryptedStorage.getItem(
+        STORED_CUSTOM_PLAYERS_KEY,
+      );
+      if (getCustomPlayersStorage) {
+        const storedCustomPlayers = JSON.parse(getCustomPlayersStorage);
+        thunkApi.dispatch(setCustomPlayers(storedCustomPlayers));
+      }
       if (getStoredPlayers) {
         const storedPlayers = JSON.parse(getStoredPlayers);
         thunkApi.dispatch(setPlayers(storedPlayers));
@@ -167,6 +283,7 @@ export const retrievePlayersFromStorage = createAsyncThunk(
 
 type InitialState = {
   players: PlayerDataList[];
+  customPlayers: PlayerDataList[];
   searchPlayerModalVisibility: boolean;
   filteredPlayers: PlayerDataList[];
 };
@@ -175,6 +292,7 @@ const initialState: InitialState = {
   players: [],
   searchPlayerModalVisibility: false,
   filteredPlayers: [],
+  customPlayers: [],
 };
 
 const playersSlice = createSlice({
@@ -187,21 +305,33 @@ const playersSlice = createSlice({
         state.players.pop();
       }
     },
+    setCustomPlayers(state, action) {
+      state.customPlayers = action.payload;
+    },
     setSearchPlayerModalVisibility(state, action) {
       state.searchPlayerModalVisibility = action.payload;
     },
     setFilteredPlayers(state, action) {
       console.log(action.payload);
-      const q: PlayerDataList[] = [...state.players];
-      state.filteredPlayers = q.filter(x =>
+      const q1: PlayerDataList[] = [...state.players];
+      const q2: PlayerDataList[] = [...state.customPlayers];
+      const filteredExisting = q1.filter(x =>
         x.player_full_name.toUpperCase().includes(action.payload.toUpperCase()),
       );
+      const filteredCustom = q2.filter(x =>
+        x.player_full_name.toUpperCase().includes(action.payload.toUpperCase()),
+      );
+      state.filteredPlayers = filteredCustom.concat(filteredExisting);
     },
   },
 });
 
-export const {setPlayers, setSearchPlayerModalVisibility, setFilteredPlayers} =
-  playersSlice.actions;
+export const {
+  setPlayers,
+  setSearchPlayerModalVisibility,
+  setFilteredPlayers,
+  setCustomPlayers,
+} = playersSlice.actions;
 
 export const selectPlayers = (state: RootState) => state.playerReducer.players;
 export const selectSearchPlayerModalVisibility = (state: RootState) =>

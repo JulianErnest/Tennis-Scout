@@ -9,6 +9,7 @@ import {
   setFetchingUser,
 } from '../State/Features/me/meSlice';
 import {
+  getCustomPlayersFromLocal,
   getPlayerCSV,
   retrievePlayersFromStorage,
   shouldGetPlayersCSV,
@@ -29,6 +30,7 @@ const Splashscreen = () => {
         const uid = auth().currentUser?.uid ?? '';
         if (uid && uid !== 'dZf0mHnlbAPP1nYENilCmPW0U2C3') {
           await dispatch(getLoggedInUser(uid));
+          await dispatch(getCustomPlayersFromLocal());
         }
         await dispatch(checkUser());
       } catch (error) {

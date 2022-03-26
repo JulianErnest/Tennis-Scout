@@ -7,6 +7,7 @@ import {RootState} from '../../hooks';
 import {getUserType, setUserType} from '../../../Helpers/StorageFunctions';
 import {ProfileInput} from '../../../Screens/CreateProfile';
 import {ADMIN} from './../../../secret';
+import {getCustomPlayers} from '../players/playersSlice';
 
 export type RegisterParams = {
   email: string;
@@ -123,6 +124,7 @@ export const login = createAsyncThunk(
       }
       const coachData = {...coach.data(), type: 'coach'};
       coachData.type = 'coach';
+      thunkApi.dispatch(getCustomPlayers());
       return coachData as SuccessfulCoachLogin;
     } catch (err: any) {
       console.log(err);
