@@ -28,6 +28,7 @@ import {resetApplications} from '../State/Features/applications/applicationsSlic
 import {resetMatch} from '../State/Features/match/matchSlice';
 import {deleteUserType} from '../Helpers/StorageFunctions';
 import AppPreviousPlayersAccount from '../Components/AppPreviousPlayersAccount';
+import {removeCustomPlayersFromLocal} from '../State/Features/players/playersSlice';
 
 const UpdateAccount = ({route}: any) => {
   const dispatch = useAppDispatch();
@@ -115,6 +116,7 @@ const UpdateAccount = ({route}: any) => {
     dispatch(resetMatch());
     dispatch(resetMe());
     try {
+      removeCustomPlayersFromLocal();
       auth().signOut();
       deleteUserType();
     } catch (e) {
