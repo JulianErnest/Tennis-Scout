@@ -14,16 +14,14 @@ const PLAYERLIST_FILENAME = 'playerList.csv';
 const LAST_RETRIEVE_TIMESTAMP_KEY = 'LASTRETRIEVETIMESTAMP';
 const STORED_PLAYERS_KEY = 'PLAYERLIST';
 const STORED_CUSTOM_PLAYERS_KEY = 'CUSTOM_PLAYERLIST';
+const MAX_EXISTING_FILTER = 30;
 
 const playerRatingsPath = db().collection('Player_Rating');
 const last_upload_timestamp_collection = db()
   .collection('Player')
   .doc('timestamp');
-const coachCustomPlayers = (coachId: string) => {
-  return db()
-    .collection('Coach_Custom_Players')
-    .doc(coachId)
-    .collection('Players');
+const coachCustomPlayers = () => {
+  return db().collection('Custom_Players');
 };
 
 export type PlayerDataList = {
@@ -65,9 +63,7 @@ export async function saveCustomPlayer(params: FormValues) {
   } as SavedCustomPlayer;
   console.log('New custom player', newCustomPlayer);
   try {
-    await coachCustomPlayers(getUserId())
-      .doc(params.playerId)
-      .set(newCustomPlayer);
+    await coachCustomPlayers().doc(params.playerId).set(newCustomPlayer);
     const getSavedCustom = await EncryptedStorage.getItem(
       STORED_CUSTOM_PLAYERS_KEY,
     );
@@ -93,7 +89,7 @@ export const getCustomPlayers = createAsyncThunk(
   'playerSlice/getCustomPlayers',
   async (_, thunkApi) => {
     try {
-      const getCustomPlayersDB = await coachCustomPlayers(getUserId()).get();
+      const getCustomPlayersDB = await coachCustomPlayers().get();
       let arr: SavedCustomPlayer[] = [];
       for (const doc of getCustomPlayersDB.docs) {
         const customPlayer = doc.data();
@@ -162,7 +158,9 @@ export async function ratePlayer(params: FormValues) {
 export async function shouldGetPlayersCSV() {
   try {
     const timestampDoc = await last_upload_timestamp_collection.get();
+    console.log('Timestamp doc shouldgetplayerCSV', timestampDoc);
     const serverUploadTime = timestampDoc.data() as any;
+    console.log('Server upload time', serverUploadTime);
     const getLastRetrieveTime = await EncryptedStorage.getItem(
       LAST_RETRIEVE_TIMESTAMP_KEY,
     );
@@ -296,14 +294,27 @@ const playersSlice = createSlice({
     },
     setFilteredPlayers(state, action) {
       console.log(action.payload);
+      const keyword = action.payload.toUpperCase();
       const q1: PlayerDataList[] = [...state.players];
       const q2: PlayerDataList[] = [...state.customPlayers];
-      const filteredExisting = q1.filter(x =>
-        x.player_full_name.toUpperCase().includes(action.payload.toUpperCase()),
-      );
-      const filteredCustom = q2.filter(x =>
-        x.player_full_name.toUpperCase().includes(action.payload.toUpperCase()),
-      );
+      const filteredExisting: PlayerDataList[] = [];
+      const filteredCustom: PlayerDataList[] = [];
+      let filteredExistingCount = 0;
+      for (
+        let i = 0;
+        i < q1.length && filteredExistingCount < MAX_EXISTING_FILTER;
+        i++
+      ) {
+        if (q1[i].player_full_name.toUpperCase().includes(keyword)) {
+          filteredExisting.push(q1[i]);
+          filteredExistingCount++;
+        }
+      }
+      for (let i = 0; i < q2.length; i++) {
+        if (q2[i].player_full_name.toUpperCase().includes(keyword)) {
+          filteredCustom.push(q1[i]);
+        }
+      }
       state.filteredPlayers = filteredCustom.concat(filteredExisting);
     },
   },
