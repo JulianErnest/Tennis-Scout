@@ -16,6 +16,12 @@ const coachPlayerNotesPath = (coachId: string) =>
   db().collection('Coach_Player_Notes').doc(coachId).collection('Notes');
 
 const matchesPath = () => db().collection('Matches');
+const playerRatingsPath = (playerId: string, matchId: string) =>
+  db()
+    .collection('Player_Rating')
+    .doc(playerId)
+    .collection('Notes')
+    .doc(matchId);
 
 export const submitMatchNotes = createAsyncThunk(
   'match/submit',
@@ -62,14 +68,14 @@ export const editMatchNotes = createAsyncThunk(
   'match/edit',
   async (params: MatchDetails, thunkApi) => {
     try {
-      const state = thunkApi.getState() as RootState;
       await db().collection('Matches').doc(params.matchId).update(params);
-      if (state.matchReducer.matchNotes[0].matchId === params.matchId) {
-        await db().collection('Coaches').doc(params.coachId).update({
-          lastOpponentLastName: params.opponentLastName,
-          lastOpponentTournament: params.tournamentName,
-        });
-      }
+      await playerRatingsPath(params.playerId, params.matchId).update({
+        serve: params.serve.rating,
+        forehand: params.forehand.rating,
+        backhand: params.backhand.rating,
+        movement: params.movement.rating,
+        volleyAndNetPlay: params.volleysAndNetPlay.rating,
+      });
       return true;
     } catch (e) {
       console.log('Error editting match notes', e);

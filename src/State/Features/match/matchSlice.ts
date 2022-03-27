@@ -43,7 +43,7 @@ export const matchSlice = createSlice({
         state.hasFetchedNotes = true;
       }
       state.matchNotes = payload.sort(
-        (a, b) => a.dateCreated - b.dateCreated,
+        (a, b) => b.dateCreated - a.dateCreated,
       ) as MatchDetails[];
     },
     resetMatch(state) {
