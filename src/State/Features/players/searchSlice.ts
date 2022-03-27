@@ -23,6 +23,7 @@ type InitialState = {
   myNumberOfNotes: number;
   otherNumberOfNotes: number;
   playerNotes: MatchDetails[];
+  hasRating: boolean;
 };
 
 const playerRatingPath = (playerId: string) =>
@@ -87,55 +88,71 @@ const initialState: InitialState = {
   otherNumberOfNotes: 0,
   fetchingRating: false,
   playerNotes: [],
+  hasRating: false,
 };
 
 const searchSlice = createSlice({
   name: 'searchSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    resetSearch(state) {
+      Object.assign(state, initialState);
+    },
+  },
   extraReducers: builder => {
     builder.addCase(getPlayerRatings.pending, state => {
       state.fetchingRating = true;
     });
     builder.addCase(getPlayerRatings.fulfilled, (state, action) => {
-      const myRating: PlayerRating[] = [];
-      const otherRating: PlayerRating[] = [];
-      const allRatings = action.payload as PlayerRating[];
-
-      for (const rating of allRatings) {
-        if (rating.coachId === getUserId()) {
-          myRating.push(rating);
-        } else {
-          otherRating.push(rating);
+      if (action.payload.length > 0) {
+        const myRating: PlayerRating[] = [];
+        const otherRating: PlayerRating[] = [];
+        const allRatings = action.payload as PlayerRating[];
+        for (const rating of allRatings) {
+          if (rating.coachId === getUserId()) {
+            myRating.push(rating);
+          } else {
+            otherRating.push(rating);
+          }
         }
-      }
 
-      const myTotal = {...Total};
-      const otherTotal = {...Total};
-      for (let i = 0; i < myRating.length; i++) {
-        myTotal.serve += myRating[i].serve;
-        myTotal.forehand += myRating[i].forehand;
-        myTotal.backhand += myRating[i].backhand;
-        myTotal.movement += myRating[i].movement;
-        myTotal.volleyAndNetPlay += myRating[i].volleyAndNetPlay;
-      }
-      for (let i = 0; i < otherRating.length; i++) {
-        otherTotal.serve += myRating[i].serve;
-        otherTotal.forehand += myRating[i].forehand;
-        otherTotal.backhand += myRating[i].backhand;
-        otherTotal.movement += myRating[i].movement;
-        otherTotal.volleyAndNetPlay += myRating[i].volleyAndNetPlay;
-      }
+        const myTotal = {...Total};
+        const otherTotal = {...Total};
+        for (let i = 0; i < myRating.length; i++) {
+          console.log(myRating[i]);
+          myTotal.serve += myRating[i].serve;
+          myTotal.forehand += myRating[i].forehand;
+          myTotal.backhand += myRating[i].backhand;
+          myTotal.movement += myRating[i].movement;
+          myTotal.volleyAndNetPlay += myRating[i].volleyAndNetPlay;
+        }
+        for (let i = 0; i < otherRating.length; i++) {
+          otherTotal.serve += otherRating[i].serve;
+          otherTotal.forehand += otherRating[i].forehand;
+          otherTotal.backhand += otherRating[i].backhand;
+          otherTotal.movement += otherRating[i].movement;
+          otherTotal.volleyAndNetPlay += otherRating[i].volleyAndNetPlay;
+        }
 
-      state.myNumberOfNotes = myRating.length;
-      state.otherNumberOfNotes = otherRating.length;
+        state.myNumberOfNotes = myRating.length;
+        state.otherNumberOfNotes = otherRating.length;
 
-      for (const key of Object.keys(myTotal)) {
-        myTotal[key as RatingKey] /= 3;
-        otherTotal[key as RatingKey] /= 3;
+        for (const key of Object.keys(myTotal)) {
+          const myAvg = (myTotal[key as RatingKey] /= myRating.length);
+          const otherAvg = (otherTotal[key as RatingKey] /= otherRating.length);
+          myTotal[key as RatingKey] = isNaN(myAvg) ? 0 : myAvg;
+          otherTotal[key as RatingKey] = isNaN(otherAvg) ? 0 : otherAvg;
+        }
+        state.otherAverageRating = {...otherTotal};
+        state.myAverageRating = {...myTotal};
+        state.hasRating = true;
+      } else {
+        state.hasRating = false;
+        state.otherAverageRating = {...initialState.otherAverageRating};
+        state.myAverageRating = {...initialState.myAverageRating};
+        state.myNumberOfNotes = 0;
+        state.otherNumberOfNotes = 0;
       }
-      state.otherAverageRating = {...otherTotal};
-      state.myAverageRating = {...myTotal};
     });
     builder.addCase(getPlayerRatings.rejected, state => {
       state.fetchingRating = false;
@@ -146,7 +163,7 @@ const searchSlice = createSlice({
   },
 });
 
-export const {} = searchSlice.actions;
+export const {resetSearch} = searchSlice.actions;
 
 export const selectFetchingRating = (state: RootState) =>
   state.searchReducer.fetchingRating;
@@ -160,5 +177,7 @@ export const selectOtherNumberOfNotes = (state: RootState) =>
   state.searchReducer.otherNumberOfNotes;
 export const selectPublicPlayerNotes = (state: RootState) =>
   state.searchReducer.playerNotes;
+export const selectHasRating = (state: RootState) =>
+  state.searchReducer.hasRating;
 
 export default searchSlice.reducer;
