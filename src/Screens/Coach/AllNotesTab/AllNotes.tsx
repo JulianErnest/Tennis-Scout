@@ -9,6 +9,7 @@ import {MatchDetails} from '../../../State/Features/match/MatchTypes';
 import {getFormattedDate} from '../../../Helpers/DateFunctions';
 import {navigate} from '../../../Navigation/NavigationUtils';
 import {getCoachNotes} from '../../../State/Features/match/MatchSliceAsyncThunks';
+import {getUserId} from '../../../State/Features/me/meSlice';
 
 const AllNotes = ({route}: any) => {
   console.log(route);
@@ -31,7 +32,6 @@ const AllNotes = ({route}: any) => {
           <Text style={styles.contentText}>
             vs {' ' + item.opponentLastName}
           </Text>
-          <Text style={styles.labelText}>{item.matchId}</Text>
           <Text style={styles.contentText}>
             {item.tournamentName} {'  -  '}
             {getFormattedDate(new Date(item.tournamentDate))}
@@ -40,12 +40,16 @@ const AllNotes = ({route}: any) => {
           <Text style={styles.contentText}>
             {getFormattedDate(new Date(item.dateCreated))}
           </Text>
-          <Text
-            style={styles.viewDetails}
-            onPress={() => handleViewDetails(item)}>
-            {'View Details '}
-            <Icon name="external-link" color="white" />
-          </Text>
+          <Text style={styles.labelText}>Inputted by</Text>
+          <Text style={styles.contentText}>{item.coachLastName}</Text>
+          {item.coachId === getUserId() && (
+            <Text
+              style={styles.viewDetails}
+              onPress={() => handleViewDetails(item)}>
+              {'View Details '}
+              <Icon name="external-link" color="white" />
+            </Text>
+          )}
         </View>
       )}
     />
