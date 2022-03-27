@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import * as Yup from 'yup';
 import AppInputLabel from '../../../Components/AppInputLabel';
 import {Formik} from 'formik';
@@ -36,7 +36,7 @@ import {
 import AppPlayerList from '../../../Components/AppPlayerList';
 import {submitMatchNotes} from '../../../State/Features/match/MatchSliceAsyncThunks';
 
-const CreateNote = () => {
+const CreateNote = ({route}: any) => {
   const [uploading, setUploading] = useState(false);
   const dispatch = useAppDispatch();
   const scrollEnabled = useAppSelector(selectEnableScroll);
@@ -48,7 +48,6 @@ const CreateNote = () => {
     tournamentDate: Yup.number().required('Tournament date is required'),
     netFrequency: Yup.string().required('Net frequency is required'),
   });
-
   function handleSelectedPlayer(player: PlayerDataList) {
     dispatch(setSearchPlayerModalVisibility(false));
     formRef.current.setFieldValue(
@@ -109,6 +108,22 @@ const CreateNote = () => {
     });
   }
 
+  useEffect(() => {
+    if (route.params) {
+      const {params} = route;
+      formRef.current.setFieldValue('useExistingPlayer', true);
+      formRef.current.setFieldValue('playerId', params.player.player_id);
+      formRef.current.setFieldValue(
+        'opponentLastName',
+        params.player.player_surname,
+      );
+      formRef.current.setFieldValue(
+        'opponentFirstName',
+        params.player.player_first_name,
+      );
+    }
+  }, [route]);
+
   return (
     <>
       <AppPlayerList onPlayerPress={player => handleSelectedPlayer(player)} />
@@ -147,7 +162,12 @@ const CreateNote = () => {
                     checkedColor={Colors.primary}
                     label={'New Player'}
                     labelColor={'black'}
-                    onPress={() => setFieldValue('useExistingPlayer', false)}
+                    onPress={() => {
+                      setFieldValue('opponentFirstName', '');
+                      setFieldValue('opponentLastName', '');
+                      setFieldValue('playerId', '');
+                      setFieldValue('useExistingPlayer', false);
+                    }}
                   />
                   <View />
                 </View>
