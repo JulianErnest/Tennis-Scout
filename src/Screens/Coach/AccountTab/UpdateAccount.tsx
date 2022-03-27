@@ -26,6 +26,7 @@ import {
 } from '../../../State/Features/me/meSlice';
 import {resetApplications} from '../../../State/Features/applications/applicationsSlice';
 import {resetMatch} from '../../../State/Features/match/matchSlice';
+import {resetSearch} from '../../../State/Features/players/searchSlice';
 import {deleteUserType} from '../../../Helpers/StorageFunctions';
 import AppPreviousPlayersAccount from '../../../Components/AppPreviousPlayersAccount';
 import {removeCustomPlayersFromLocal} from '../../../State/Features/players/playersSlice';
@@ -115,6 +116,7 @@ const UpdateAccount = ({route}: any) => {
     dispatch(resetAccount());
     dispatch(resetMatch());
     dispatch(resetMe());
+    dispatch(resetSearch());
     try {
       removeCustomPlayersFromLocal();
       auth().signOut();
