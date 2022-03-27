@@ -7,7 +7,7 @@ import HeaderLeft from '../Components/HeaderLeft';
 import {Colors} from '../Styles/GlobalStyles';
 import {useAppSelector} from '../State/hooks';
 import {selectIsProfileCreated} from '../State/Features/me/meSlice';
-import MatchNotes from '../Screens/Coach/CreateNoteTab/CreateNote';
+import CreateNote from '../Screens/Coach/CreateNoteTab/CreateNote';
 import UpdateAccount from '../Screens/Coach/AccountTab/UpdateAccount';
 import AllNotes from '../Screens/Coach/AllNotesTab/AllNotes';
 import CreateProfile from '../Screens/Coach/Common/CreateProfile';
@@ -39,7 +39,7 @@ const CoachNavigation = () => {
           let iconName;
           if (route.name === 'CoachDashboard') {
             iconName = 'home';
-          } else if (route.name === 'MatchNotes') {
+          } else if (route.name === 'CreateNote') {
             iconName = 'edit';
           } else if (route.name === 'AllNotesStack') {
             iconName = 'database';
@@ -52,7 +52,7 @@ const CoachNavigation = () => {
         },
       })}>
       <Tab.Screen name="CoachDashboard" component={CoachDashboard} />
-      <Tab.Screen name="MatchNotes" component={MatchNotes} />
+      <Tab.Screen name="CreateNote" component={CreateNote} />
       <Tab.Screen name="AllNotesStack" component={AllNotesStack} />
       <Tab.Screen name="SearchOpponentStack" component={SearchOpponentStack} />
       <Tab.Screen name="UpdateAccount" component={UpdateAccount} />
