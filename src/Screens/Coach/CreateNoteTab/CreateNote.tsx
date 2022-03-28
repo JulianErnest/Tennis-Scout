@@ -28,6 +28,7 @@ import {FormValues} from '../../../State/Features/match/MatchTypes';
 import {initialFormValues} from '../../../State/Features/match/MatchConstants';
 import {getLoggedInUser, getUserId} from '../../../State/Features/me/meSlice';
 import {
+  addCustomPlayerToList,
   generatePlayerId,
   PlayerDataList,
   saveCustomPlayer,
@@ -74,7 +75,9 @@ const CreateNote = ({route}: any) => {
         }
         sent = await dispatch(submitMatchNotes(values)).unwrap();
         if (!values.useExistingPlayer) {
+          console.log('Line 77 I was was called here');
           await saveCustomPlayer(values);
+          dispatch(addCustomPlayerToList(values));
         }
         if (sent) {
           await getMatchNotes();

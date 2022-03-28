@@ -27,7 +27,6 @@ import {
 import Toast from 'react-native-toast-message';
 
 const EditNote = ({route}: any) => {
-  console.log('Edit note props', route);
   const [uploading, setUploading] = useState(false);
   const dispatch = useAppDispatch();
   const scrollEnabled = useAppSelector(selectEnableScroll);
@@ -99,13 +98,7 @@ const EditNote = ({route}: any) => {
             validationSchema={MatchNotesSchema}
             initialValues={route.params as MatchDetails}
             onSubmit={values => handleSubmitForm(values)}>
-            {({
-              handleSubmit,
-              handleChange,
-              values,
-              setFieldValue,
-              resetForm,
-            }) => (
+            {({handleSubmit, handleChange, values, setFieldValue}) => (
               <>
                 <AppInputLabel
                   disabled={values.useExistingPlayer}
@@ -342,23 +335,20 @@ const EditNote = ({route}: any) => {
                   hideText={false}
                   multiline={true}
                 />
-                <View style={styles.actionContainer}>
-                  <Text>
-                    <Icon
-                      name="check-circle"
-                      color={Colors.primary}
-                      size={20}
-                      onPress={handleSubmit}
-                    />
-                    {'  '}
-                    <Text style={styles.actions}>Edit</Text>
-                  </Text>
-                  <Text style={styles.actions} onPress={() => resetForm()}>
-                    <Icon name="x-circle" color={Colors.primary} size={20} />
-                    {'  '}
-                    <Text>Clear</Text>
-                  </Text>
-                </View>
+                {route.params.type !== 'cant-edit' && (
+                  <View style={styles.actionContainer}>
+                    <Text>
+                      <Icon
+                        name="check-circle"
+                        color={Colors.primary}
+                        size={20}
+                        onPress={handleSubmit}
+                      />
+                      {'  '}
+                      <Text style={styles.actions}>Edit</Text>
+                    </Text>
+                  </View>
+                )}
               </>
             )}
           </Formik>

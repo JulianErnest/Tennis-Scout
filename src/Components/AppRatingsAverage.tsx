@@ -15,56 +15,112 @@ const AppRatingsAverage = () => {
     <View style={styles.mainContainer}>
       <Text style={styles.label}>Serve Rating Averages</Text>
       <View style={styles.line}>
-        <View style={[styles.circle, {left: 29 * myAverageRating.serve}]} />
+        <View style={[styles.circle, {left: 27 * myAverageRating.serve}]} />
+        <Text style={[styles.myRating, {left: 27.2 * myAverageRating.serve}]}>
+          {myAverageRating.serve}
+        </Text>
+        <Text
+          style={[styles.otherRating, {left: 27.2 * otherAverageRating.serve}]}>
+          {otherAverageRating.serve}
+        </Text>
         <View
           style={[
             styles.circle,
             styles.gray,
-            {left: 29 * otherAverageRating.serve},
+            {left: 27 * otherAverageRating.serve},
           ]}
         />
       </View>
       <Text style={styles.label}>Forehand Rating Averages</Text>
       <View style={styles.line}>
-        <View style={[styles.circle, {left: 29 * myAverageRating.forehand}]} />
+        <View style={[styles.circle, {left: 27 * myAverageRating.forehand}]} />
+        <Text
+          style={[styles.myRating, {left: 27.2 * myAverageRating.forehand}]}>
+          {myAverageRating.forehand}
+        </Text>
+        <Text
+          style={[
+            styles.otherRating,
+            {left: 27.2 * otherAverageRating.forehand},
+          ]}>
+          {otherAverageRating.forehand}
+        </Text>
         <View
           style={[
             styles.circle,
             styles.gray,
-            {left: 29 * otherAverageRating.forehand},
+            {left: 27 * otherAverageRating.forehand},
           ]}
         />
       </View>
       <Text style={styles.label}>Backhand Averages</Text>
       <View style={styles.line}>
-        <View style={[styles.circle, {left: 29 * myAverageRating.backhand}]} />
+        <View style={[styles.circle, {left: 27 * myAverageRating.backhand}]} />
+        <Text
+          style={[styles.myRating, {left: 27.2 * myAverageRating.backhand}]}>
+          {myAverageRating.backhand}
+        </Text>
+        <Text
+          style={[
+            styles.otherRating,
+            {left: 27.2 * otherAverageRating.backhand},
+          ]}>
+          {otherAverageRating.backhand}
+        </Text>
         <View
           style={[
             styles.circle,
             styles.gray,
-            {left: 29 * otherAverageRating.backhand},
+            {left: 27 * otherAverageRating.backhand},
           ]}
         />
       </View>
       <Text style={styles.label}>Movement Averages</Text>
       <View style={styles.line}>
-        <View style={[styles.circle, {left: 29 * myAverageRating.forehand}]} />
+        <View style={[styles.circle, {left: 27 * myAverageRating.movement}]} />
+        <Text
+          style={[styles.myRating, {left: 27.2 * myAverageRating.movement}]}>
+          {myAverageRating.movement}
+        </Text>
+        <Text
+          style={[
+            styles.otherRating,
+            {left: 27.2 * otherAverageRating.movement},
+          ]}>
+          {otherAverageRating.movement}
+        </Text>
         <View
           style={[
             styles.circle,
             styles.gray,
-            {left: 29 * otherAverageRating.forehand},
+            {left: 27 * otherAverageRating.movement},
           ]}
         />
       </View>
       <Text style={styles.label}>Volley & Net Play Averages</Text>
       <View style={styles.line}>
-        <View style={[styles.circle, {left: 29 * myAverageRating.forehand}]} />
+        <View
+          style={[styles.circle, {left: 27 * myAverageRating.volleyAndNetPlay}]}
+        />
+        <Text
+          style={[
+            styles.myRating,
+            {left: 27.2 * myAverageRating.volleyAndNetPlay},
+          ]}>
+          {myAverageRating.volleyAndNetPlay}
+        </Text>
+        <Text
+          style={[
+            styles.otherRating,
+            {left: 27.2 * otherAverageRating.volleyAndNetPlay},
+          ]}>
+          {otherAverageRating.volleyAndNetPlay}
+        </Text>
         <View
           style={[
             styles.circle,
             styles.gray,
-            {left: 29 * otherAverageRating.forehand},
+            {left: 27 * otherAverageRating.volleyAndNetPlay},
           ]}
         />
       </View>
@@ -87,12 +143,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray',
   },
   label: {
-    marginTop: 30,
+    marginTop: 35,
     fontSize: 20,
   },
   line: {
     height: 3,
-    marginTop: 30,
+    marginTop: 35,
     flex: 1,
     width: 290,
     backgroundColor: 'black',
@@ -102,5 +158,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
+  },
+  myRating: {
+    fontSize: 13,
+    position: 'absolute',
+    color: Colors.primary,
+    top: 20,
+  },
+  otherRating: {
+    fontSize: 13,
+    position: 'absolute',
+    top: -30,
   },
 });

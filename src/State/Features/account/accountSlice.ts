@@ -88,8 +88,8 @@ const accountSlice = createSlice({
         previousPlayers: payload.previousPlayers,
       };
     },
-    setAllCoaches(state, {payload}) {
-      state.allCoaches = payload;
+    setAllCoaches(state, action) {
+      state.allCoaches = action.payload;
     },
     resetAccount(state) {
       Object.assign(state.userAccountDetails, initialState);

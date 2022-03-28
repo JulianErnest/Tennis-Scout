@@ -11,6 +11,71 @@ import {
   getAllPublicPlayerNotes,
   selectPublicPlayerNotes,
 } from '../../../State/Features/players/searchSlice';
+import {getUserId} from '../../../State/Features/me/meSlice';
+
+type NoteViewProps = {
+  item: MatchDetails;
+  index: number;
+};
+
+const MyNote = ({item, index}: NoteViewProps) => {
+  function handleViewDetails(match: MatchDetails) {
+    navigate('EditNote', {...match, type: 'cant-edit'});
+  }
+  return (
+    <View key={index} style={styles.previewContainer}>
+      <Text style={[styles.contentText, styles.white]}>
+        vs {' ' + item.opponentLastName}
+      </Text>
+      <Text style={[styles.contentText, styles.white]}>
+        {item.tournamentName} {'  -  '}
+        {getFormattedDate(new Date(item.tournamentDate))}
+      </Text>
+      <Text style={[styles.labelText, styles.white]}>Date Inputted</Text>
+      <Text style={[styles.contentText, styles.white]}>
+        {getFormattedDate(new Date(item.dateCreated))}
+      </Text>
+      <Text style={[styles.labelText, styles.white]}>Inputted by</Text>
+      <Text style={[styles.contentText, styles.white]}>You</Text>
+      <Text
+        style={[styles.viewDetails, styles.white]}
+        onPress={() => handleViewDetails(item)}>
+        {'View Details '}
+        <Icon name="external-link" color="white" />
+      </Text>
+    </View>
+  );
+};
+
+const OtherCoachNote = ({item, index}: NoteViewProps) => {
+  function handleViewDetails(match: MatchDetails) {
+    navigate('EditNote', {...match, type: 'cant-edit'});
+  }
+  return (
+    <View key={index} style={styles.previewOtherContainer}>
+      <Text style={styles.contentText}>vs {' ' + item.opponentLastName}</Text>
+      <Text style={styles.contentText}>
+        {item.tournamentName} {'  -  '}
+        {getFormattedDate(new Date(item.tournamentDate))}
+      </Text>
+      <Text style={styles.labelText}>Date Inputted</Text>
+      <Text style={styles.contentText}>
+        {getFormattedDate(new Date(item.dateCreated))}
+      </Text>
+      <Text style={[styles.labelText]}>Inputted by</Text>
+      <Text
+        style={
+          styles.contentText
+        }>{`${item.coachFirstName} ${item.coachLastName}`}</Text>
+      <Text
+        style={[styles.viewDetails]}
+        onPress={() => handleViewDetails(item)}>
+        {'View Details '}
+        <Icon name="external-link" color={Colors.primary} />
+      </Text>
+    </View>
+  );
+};
 
 const AllPlayerNotes = ({route}: any) => {
   console.log(route);
@@ -21,10 +86,6 @@ const AllPlayerNotes = ({route}: any) => {
     dispatch(getAllPublicPlayerNotes(route.params.player.player_id));
   }, [dispatch, route.params.player.player_id]);
 
-  function handleViewDetails(item: MatchDetails) {
-    navigate('EditNote', {...item, type: 'edit'});
-  }
-
   return (
     <View style={styles.container}>
       <Text style={styles.mainText}>
@@ -33,29 +94,14 @@ const AllPlayerNotes = ({route}: any) => {
       <FlatList
         style={styles.list}
         data={notes}
-        keyExtractor={data => data.dateCreated.toString()}
-        renderItem={({item, index}) => (
-          <View key={index} style={styles.previewContainer}>
-            <Text style={styles.contentText}>
-              vs {' ' + item.opponentLastName}
-            </Text>
-            <Text style={styles.labelText}>{item.matchId}</Text>
-            <Text style={styles.contentText}>
-              {item.tournamentName} {'  -  '}
-              {getFormattedDate(new Date(item.tournamentDate))}
-            </Text>
-            <Text style={styles.labelText}>Date Inputted</Text>
-            <Text style={styles.contentText}>
-              {getFormattedDate(new Date(item.dateCreated))}
-            </Text>
-            <Text
-              style={styles.viewDetails}
-              onPress={() => handleViewDetails(item)}>
-              {'View Details '}
-              <Icon name="external-link" color="white" />
-            </Text>
-          </View>
-        )}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({item, index}) => {
+          if (item.coachId === getUserId()) {
+            return <MyNote item={item} index={index} />;
+          } else {
+            return <OtherCoachNote item={item} index={index} />;
+          }
+        }}
       />
       <Text />
     </View>
@@ -73,7 +119,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginVertical: 3,
     marginHorizontal: 10,
-    color: 'white',
   },
   search: {
     width: 320,
@@ -85,7 +130,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
   },
   labelText: {
-    color: Colors.lightGray,
     fontWeight: '400',
     fontSize: 14,
     marginVertical: 4,
@@ -93,6 +137,7 @@ const styles = StyleSheet.create({
   },
   list: {
     paddingBottom: 150,
+    width: '100%',
   },
   mainText: {
     fontSize: 20,
@@ -103,13 +148,25 @@ const styles = StyleSheet.create({
   },
   previewContainer: {
     width: 300,
-    height: 170,
+    height: 200,
     backgroundColor: Colors.primary,
     marginVertical: 15,
     alignSelf: 'center',
   },
-  viewDetails: {
+  previewOtherContainer: {
+    width: 300,
+    height: 200,
+    backgroundColor: 'lightgray',
+    marginVertical: 15,
+    alignSelf: 'center',
+  },
+  primary: {
+    color: Colors.primary,
+  },
+  white: {
     color: 'white',
+  },
+  viewDetails: {
     marginBottom: 10,
     marginTop: 'auto',
     alignSelf: 'center',

@@ -312,10 +312,20 @@ const playersSlice = createSlice({
       }
       for (let i = 0; i < q2.length; i++) {
         if (q2[i].player_full_name.toUpperCase().includes(keyword)) {
-          filteredCustom.push(q1[i]);
+          filteredCustom.push(q2[i]);
         }
       }
       state.filteredPlayers = filteredCustom.concat(filteredExisting);
+    },
+    addCustomPlayerToList(state, action) {
+      const {payload} = action;
+      const newCustomPlayer = {
+        player_first_name: payload.opponentFirstName,
+        player_surname: payload.opponentLastName,
+        player_full_name: `${payload.opponentFirstName} ${payload.opponentLastName}`,
+        player_id: payload.playerId,
+      } as SavedCustomPlayer;
+      state.customPlayers.push(newCustomPlayer);
     },
   },
 });
@@ -325,6 +335,7 @@ export const {
   setSearchPlayerModalVisibility,
   setFilteredPlayers,
   setCustomPlayers,
+  addCustomPlayerToList,
 } = playersSlice.actions;
 
 export const selectPlayers = (state: RootState) => state.playerReducer.players;
