@@ -1,4 +1,10 @@
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
 
@@ -52,15 +58,19 @@ const SearchOpponent = () => {
       <AppPlayerList onPlayerPress={player => handlePlayerPress(player)} />
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Text style={styles.pageLabel}>Search Opponent</Text>
-        <TextInput
-          onPressIn={handleSearchModalOpen}
-          disabled
-          value={`${searchPlayer?.player_full_name ?? 'Select a player'} ${
-            searchPlayer?.player_id ?? ''
-          }`}
-          theme={{colors: {primary: Colors.primary}}}
-          style={styles.selectPlayerContainer}
-        />
+        <TouchableOpacity
+          onPress={handleSearchModalOpen}
+          style={styles.selectPlayerButton}>
+          <TextInput
+            onPressIn={handleSearchModalOpen}
+            disabled
+            value={`${searchPlayer?.player_full_name ?? 'Select a player'} ${
+              searchPlayer?.player_id ?? ''
+            }`}
+            theme={{colors: {primary: Colors.primary}}}
+            style={styles.selectPlayerContainer}
+          />
+        </TouchableOpacity>
         {searchPlayer && (
           <>
             <View style={styles.row}>
@@ -169,11 +179,13 @@ const styles = StyleSheet.create({
     width: 270,
     backgroundColor: '#e7e7e7',
     height: 38,
-    marginTop: 10,
     borderWidth: 0.3,
     borderColor: Colors.primary,
-    paddingLeft: 10,
-    marginBottom: 10,
     flexDirection: 'row',
   },
+  selectPlayerButton: {
+    paddingLeft: 10,
+    marginBottom: 10,
+    marginTop: 10,
+  }
 });
