@@ -236,7 +236,6 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     height: 180,
     marginBottom: 15,
-    marginTop: -50,
   },
   label: {
     color: Colors.primary,
