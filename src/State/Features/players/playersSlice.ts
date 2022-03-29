@@ -295,24 +295,26 @@ const playersSlice = createSlice({
     setFilteredPlayers(state, action) {
       console.log(action.payload);
       const keyword = action.payload.toUpperCase();
-      const q1: PlayerDataList[] = [...state.players];
-      const q2: PlayerDataList[] = [...state.customPlayers];
       const filteredExisting: PlayerDataList[] = [];
       const filteredCustom: PlayerDataList[] = [];
       let filteredExistingCount = 0;
       for (
         let i = 0;
-        i < q1.length && filteredExistingCount < MAX_EXISTING_FILTER;
+        i < state.players.length && filteredExistingCount < MAX_EXISTING_FILTER;
         i++
       ) {
-        if (q1[i].player_full_name.toUpperCase().includes(keyword)) {
-          filteredExisting.push(q1[i]);
+        if (state.players[i].player_full_name.toUpperCase().includes(keyword)) {
+          filteredExisting.push(state.players[i]);
           filteredExistingCount++;
         }
       }
-      for (let i = 0; i < q2.length; i++) {
-        if (q2[i].player_full_name.toUpperCase().includes(keyword)) {
-          filteredCustom.push(q2[i]);
+      for (let i = 0; i < state.customPlayers.length; i++) {
+        if (
+          state.customPlayers[i].player_full_name
+            .toUpperCase()
+            .includes(keyword)
+        ) {
+          filteredCustom.push(state.customPlayers[i]);
         }
       }
       state.filteredPlayers = filteredCustom.concat(filteredExisting);
