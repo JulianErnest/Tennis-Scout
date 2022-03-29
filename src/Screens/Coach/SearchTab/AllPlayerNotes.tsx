@@ -20,7 +20,7 @@ type NoteViewProps = {
 
 const MyNote = ({item, index}: NoteViewProps) => {
   function handleViewDetails(match: MatchDetails) {
-    navigate('EditNote', {...match, type: 'cant-edit'});
+    navigate('EditNote', {...match, type: 'edit'});
   }
   return (
     <View key={index} style={styles.previewContainer}>
