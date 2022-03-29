@@ -143,6 +143,7 @@ const EditNote = ({route}: any) => {
                   label="Start Date"
                   labelColor="black"
                   value={values.tournamentDate}
+                  maximumDate={new Date()}
                 />
                 <Text style={styles.instruction}>
                   Rate each area of the opponent during the match 1-10

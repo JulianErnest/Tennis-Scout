@@ -177,6 +177,7 @@ const CreateProfile = () => {
                   label="Start Date"
                   labelColor="white"
                   value={values.currentStartDate}
+                  maximumDate={new Date()}
                 />
                 {errors.currentStartDate && touched.currentStartDate && (
                   <AppErrorText color="white" error="Start Date is required" />

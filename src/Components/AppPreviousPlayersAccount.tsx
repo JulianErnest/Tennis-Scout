@@ -105,6 +105,7 @@ const AppPreviousPlayersAccount = ({
                       label="Start Date"
                       labelColor="black"
                       value={player.startDate}
+                      maximumDate={new Date()}
                     />
                   )}
                 </Field>
@@ -125,6 +126,8 @@ const AppPreviousPlayersAccount = ({
                       label="End Date"
                       labelColor="black"
                       value={player.endDate}
+                      maximumDate={new Date()}
+                      minimumDate={new Date(player.startDate)}
                     />
                   )}
                 </Field>

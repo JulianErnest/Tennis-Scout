@@ -12,6 +12,8 @@ type AppDatePickerProps = {
   setDate: (date: Date) => void;
   value: number;
   date: Date;
+  maximumDate: Date;
+  minimumDate?: Date;
 };
 
 const AppDatePicker = (props: AppDatePickerProps) => {
@@ -21,12 +23,14 @@ const AppDatePicker = (props: AppDatePickerProps) => {
     <>
       {seen && (
         <DatePicker
+          maximumDate={props.maximumDate}
+          minimumDate={props.minimumDate ?? undefined}
           modal
           mode="date"
           open={seen}
           date={props.date}
           onConfirm={selectedDate => {
-            console.log(selectedDate)
+            console.log(selectedDate);
             setSeen(false);
             setDate(selectedDate);
           }}

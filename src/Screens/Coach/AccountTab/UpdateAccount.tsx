@@ -271,6 +271,7 @@ const UpdateAccount = ({route}: any) => {
                 label="Start Date"
                 labelColor="black"
                 value={values.currentStartDate}
+                maximumDate={new Date()}
               />
               {errors.currentStartDate && touched.currentStartDate && (
                 <AppErrorText color="black" error="Start Date is required" />
