@@ -33,7 +33,6 @@ const SearchOpponent = () => {
   const hasRating = useAppSelector(selectHasRating);
 
   function handleSearchModalOpen() {
-    console.log('dijsadasdhjashdashjdajkdhasjdhajsdhjksdh');
     dispatch(setSearchPlayerModalVisibility(true));
   }
 

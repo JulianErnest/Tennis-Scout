@@ -3,37 +3,20 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Feather';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import AdminDashboard from '../Screens/Admin/AdminDashboard';
+import AdminDashboard from '../Screens/Admin/DashboardTab/AdminDashboard';
 import HeaderLeft from '../Components/HeaderLeft';
 import {Colors} from '../Styles/GlobalStyles';
-import PendingApplications from '../Screens/Admin/PendingApplications';
-import AllMatches from '../Screens/Admin/AllMatches';
-import AllCoaches from '../Screens/Admin/AllCoaches';
+import PendingApplications from '../Screens/Admin/PendingApplicationsTab/PendingApplications';
+import AllMatches from '../Screens/Admin/AllMatchesTab/AllMatches';
+import AllCoaches from '../Screens/Admin/AllCoachesTab/AllCoaches';
 import UpdateAccount from '../Screens/Coach/AccountTab/UpdateAccount';
 import AllNotes from '../Screens/Coach/AllNotesTab/AllNotes';
 import MatchNotes from '../Screens/Coach/CreateNoteTab/CreateNote';
+import EditNote from '../Screens/Coach/Common/EditNote';
+import AdminCoachNotes from '../Screens/Admin/AllCoachesTab/AdminCoachNotes';
+
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
-
-const AllCoachesStack = () => {
-  return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="CoachestList" component={AllCoaches} />
-      <Stack.Screen name="CoachProfile" component={UpdateAccount} />
-      <Stack.Screen name="CoachNotes" component={AllNotes} />
-    </Stack.Navigator>
-  );
-};
-
-const AllMatchesStack = () => {
-  return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="MatchesList" component={AllMatches} />
-      <Stack.Screen name="NoteDetails" component={MatchNotes} />
-    </Stack.Navigator>
-  );
-};
 
 const AdminNavigation = () => {
   return (
@@ -65,6 +48,28 @@ const AdminNavigation = () => {
       <Tab.Screen name="PendingApplications" component={PendingApplications} />
       <Tab.Screen name="MatchDetails" component={AllMatchesStack} />
     </Tab.Navigator>
+  );
+};
+
+const Stack = createStackNavigator();
+
+const AllCoachesStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="CoachestList" component={AllCoaches} />
+      <Stack.Screen name="CoachProfile" component={UpdateAccount} />
+      <Stack.Screen name="CoachNotes" component={AdminCoachNotes} />
+      <Stack.Screen name="EditNote" component={EditNote} />
+    </Stack.Navigator>
+  );
+};
+
+const AllMatchesStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="MatchesList" component={AllMatches} />
+      <Stack.Screen name="EditNote" component={EditNote} />
+    </Stack.Navigator>
   );
 };
 
