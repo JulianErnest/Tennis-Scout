@@ -10,11 +10,8 @@ import PendingApplications from '../Screens/Admin/PendingApplicationsTab/Pending
 import AllMatches from '../Screens/Admin/AllMatchesTab/AllMatches';
 import AllCoaches from '../Screens/Admin/AllCoachesTab/AllCoaches';
 import UpdateAccount from '../Screens/Coach/AccountTab/UpdateAccount';
-import AllNotes from '../Screens/Coach/AllNotesTab/AllNotes';
-import MatchNotes from '../Screens/Coach/CreateNoteTab/CreateNote';
 import EditNote from '../Screens/Coach/Common/EditNote';
 import AdminCoachNotes from '../Screens/Admin/AllCoachesTab/AdminCoachNotes';
-
 
 const Tab = createBottomTabNavigator();
 

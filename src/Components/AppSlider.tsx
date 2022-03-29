@@ -18,7 +18,7 @@ const AppSlider = (props: AppSliderProps) => {
   return (
     <View style={styles.container}>
       {props.label !== '' && (
-        <Text>
+        <Text style={styles.label}>
           {props.label}: {props.value}/10
         </Text>
       )}
@@ -46,5 +46,8 @@ const styles = StyleSheet.create({
   slider: {
     width: 300,
     height: 40,
+  },
+  label: {
+    color: 'black',
   },
 });

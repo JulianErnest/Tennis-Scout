@@ -25,7 +25,7 @@ import {
   getCoachNotes,
 } from '../../../State/Features/match/MatchSliceAsyncThunks';
 import Toast from 'react-native-toast-message';
-import { getUserId } from '../../../State/Features/me/meSlice';
+import {getUserId} from '../../../State/Features/me/meSlice';
 
 const EditNote = ({route}: any) => {
   const [uploading, setUploading] = useState(false);
@@ -385,6 +385,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 17,
     textAlign: 'center',
+    color: 'black',
   },
   loading: {
     flex: 1,
@@ -396,6 +397,7 @@ const styles = StyleSheet.create({
   optionalNotes: {
     textAlign: 'center',
     marginTop: 10,
+    color: 'black',
   },
   radioContainer: {
     flexDirection: 'row',
@@ -428,5 +430,6 @@ const styles = StyleSheet.create({
   },
   sliderLabelText: {
     fontWeight: 'bold',
+    color: 'black',
   },
 });

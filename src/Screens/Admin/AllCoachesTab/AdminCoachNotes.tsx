@@ -9,15 +9,15 @@ import {MatchDetails} from '../../../State/Features/match/MatchTypes';
 import {getFormattedDate} from '../../../Helpers/DateFunctions';
 import {navigate} from '../../../Navigation/NavigationUtils';
 import {getCoachNotes} from '../../../State/Features/match/MatchSliceAsyncThunks';
-import {getUserId} from '../../../State/Features/me/meSlice';
 
 const AdminCoachNotes = ({route}: any) => {
   console.log('Admin coach notes route', route);
   const dispatch = useAppDispatch();
   const matchNotes = useAppSelector(selectMatchNotes);
+
   useEffect(() => {
     dispatch(getCoachNotes(route.params));
-  }, [dispatch]);
+  }, [dispatch, route.params]);
 
   function handleViewDetails(item: MatchDetails) {
     navigate('EditNote', {...item, type: 'edit'});
@@ -42,14 +42,12 @@ const AdminCoachNotes = ({route}: any) => {
           </Text>
           <Text style={styles.labelText}>Inputted by</Text>
           <Text style={styles.contentText}>{item.coachLastName}</Text>
-          {item.coachId === getUserId() && (
-            <Text
-              style={styles.viewDetails}
-              onPress={() => handleViewDetails(item)}>
-              {'View Details '}
-              <Icon name="external-link" color="white" />
-            </Text>
-          )}
+          <Text
+            style={styles.viewDetails}
+            onPress={() => handleViewDetails(item)}>
+            {'View Details '}
+            <Icon name="external-link" color="white" />
+          </Text>
         </View>
       )}
     />
