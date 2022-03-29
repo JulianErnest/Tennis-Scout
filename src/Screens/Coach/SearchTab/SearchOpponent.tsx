@@ -1,11 +1,11 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
 
 import {useAppDispatch, useAppSelector} from '../../../State/hooks';
 import {Colors} from '../../../Styles/GlobalStyles';
 import {navigate} from '../../../Navigation/NavigationUtils';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import {
   PlayerDataList,
   setSearchPlayerModalVisibility,
@@ -28,6 +28,7 @@ const SearchOpponent = () => {
   const hasRating = useAppSelector(selectHasRating);
 
   function handleSearchModalOpen() {
+    console.log('dijsadasdhjashdashjdajkdhasjdhajsdhjksdh');
     dispatch(setSearchPlayerModalVisibility(true));
   }
 
