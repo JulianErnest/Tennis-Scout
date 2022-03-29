@@ -1,11 +1,10 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
 
 import {useAppDispatch, useAppSelector} from '../../../State/hooks';
 import {Colors} from '../../../Styles/GlobalStyles';
 import {navigate} from '../../../Navigation/NavigationUtils';
-import {ScrollView} from 'react-native-gesture-handler';
 import {
   PlayerDataList,
   setSearchPlayerModalVisibility,
@@ -53,16 +52,15 @@ const SearchOpponent = () => {
       <AppPlayerList onPlayerPress={player => handlePlayerPress(player)} />
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Text style={styles.pageLabel}>Search Opponent</Text>
-        <TouchableOpacity onPress={handleSearchModalOpen}>
-          <TextInput
-            disabled
-            value={`${searchPlayer?.player_full_name ?? 'Select a player'} ${
-              searchPlayer?.player_id ?? ''
-            }`}
-            theme={{colors: {primary: Colors.primary}}}
-            style={styles.selectPlayerContainer}
-          />
-        </TouchableOpacity>
+        <TextInput
+          onPressIn={handleSearchModalOpen}
+          disabled
+          value={`${searchPlayer?.player_full_name ?? 'Select a player'} ${
+            searchPlayer?.player_id ?? ''
+          }`}
+          theme={{colors: {primary: Colors.primary}}}
+          style={styles.selectPlayerContainer}
+        />
         {searchPlayer && (
           <>
             <View style={styles.row}>
@@ -171,11 +169,11 @@ const styles = StyleSheet.create({
     width: 270,
     backgroundColor: '#e7e7e7',
     height: 38,
+    marginTop: 10,
     borderWidth: 0.3,
     borderColor: Colors.primary,
     paddingLeft: 10,
     marginBottom: 10,
-    marginTop: 20,
     flexDirection: 'row',
   },
 });
