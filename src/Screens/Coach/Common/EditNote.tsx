@@ -25,6 +25,7 @@ import {
   getCoachNotes,
 } from '../../../State/Features/match/MatchSliceAsyncThunks';
 import Toast from 'react-native-toast-message';
+import { getUserId } from '../../../State/Features/me/meSlice';
 
 const EditNote = ({route}: any) => {
   const [uploading, setUploading] = useState(false);
@@ -70,7 +71,7 @@ const EditNote = ({route}: any) => {
         visibilityTime: 3000,
         autoHide: true,
       });
-      dispatch(getCoachNotes());
+      dispatch(getCoachNotes(getUserId()));
     } catch (e) {
       console.log('Error submitting form', e);
       setUploading(false);

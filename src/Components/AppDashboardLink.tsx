@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 15,
     textAlign: 'center',
+    color: 'black',
   },
   mainContainer: {
     margin: 15,

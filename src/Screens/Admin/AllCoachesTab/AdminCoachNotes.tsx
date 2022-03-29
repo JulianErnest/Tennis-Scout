@@ -11,12 +11,12 @@ import {navigate} from '../../../Navigation/NavigationUtils';
 import {getCoachNotes} from '../../../State/Features/match/MatchSliceAsyncThunks';
 import {getUserId} from '../../../State/Features/me/meSlice';
 
-const AllNotes = ({route}: any) => {
-  console.log(route);
+const AdminCoachNotes = ({route}: any) => {
+  console.log('Admin coach notes route', route);
   const dispatch = useAppDispatch();
   const matchNotes = useAppSelector(selectMatchNotes);
   useEffect(() => {
-    dispatch(getCoachNotes(getUserId()));
+    dispatch(getCoachNotes(route.params));
   }, [dispatch]);
 
   function handleViewDetails(item: MatchDetails) {
@@ -56,7 +56,7 @@ const AllNotes = ({route}: any) => {
   );
 };
 
-export default AllNotes;
+export default AdminCoachNotes;
 
 const styles = StyleSheet.create({
   contentText: {

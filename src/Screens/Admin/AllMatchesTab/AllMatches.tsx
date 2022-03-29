@@ -6,16 +6,16 @@ import {PermissionsAndroid} from 'react-native';
 import Toast from 'react-native-toast-message';
 
 import React, {useEffect} from 'react';
-import {MatchDetails} from '../../State/Features/match/MatchTypes';
-import {useAppDispatch, useAppSelector} from '../../State/hooks';
+import {MatchDetails} from '../../../State/Features/match/MatchTypes';
+import {useAppDispatch, useAppSelector} from '../../../State/hooks';
 import {
   selectMatchNotes,
   setAdminMatches,
-} from '../../State/Features/match/matchSlice';
-import {Colors, GlobalStyles} from '../../Styles/GlobalStyles';
+} from '../../../State/Features/match/matchSlice';
+import {Colors, GlobalStyles} from '../../../Styles/GlobalStyles';
 import {Button} from 'react-native-paper';
-import {getFormattedDate} from '../../Helpers/DateFunctions';
-import {navigate} from '../../Navigation/NavigationUtils';
+import {getFormattedDate} from '../../../Helpers/DateFunctions';
+import {navigate} from '../../../Navigation/NavigationUtils';
 
 const AllMatches = () => {
   const dispatch = useAppDispatch();
@@ -100,7 +100,7 @@ const AllMatches = () => {
   }
 
   function handleViewFullDetails(item: MatchDetails) {
-    navigate('NoteDetails', item);
+    navigate('EditNote', item);
   }
 
   return (

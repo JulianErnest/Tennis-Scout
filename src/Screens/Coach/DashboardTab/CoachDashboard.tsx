@@ -4,7 +4,7 @@ import auth from '@react-native-firebase/auth';
 
 import {Colors} from '../../../Styles/GlobalStyles';
 import {useAppDispatch, useAppSelector} from '../../../State/hooks';
-import {selectUserDetails} from '../../../State/Features/me/meSlice';
+import {getUserId, selectUserDetails} from '../../../State/Features/me/meSlice';
 import AppDashboardLink from '../../../Components/AppDashboardLink';
 import {selectMatchNotes} from '../../../State/Features/match/matchSlice';
 import {setAccountDetails} from '../../../State/Features/account/accountSlice';
@@ -16,7 +16,7 @@ const CoachDashboard = () => {
   const uid = auth().currentUser?.uid;
   const matchNotes = useAppSelector(selectMatchNotes);
   useEffect(() => {
-    dispatch(getCoachNotes());
+    dispatch(getCoachNotes(getUserId()));
     dispatch(setAccountDetails(userDetails));
   }, [dispatch, uid, userDetails]);
   return (

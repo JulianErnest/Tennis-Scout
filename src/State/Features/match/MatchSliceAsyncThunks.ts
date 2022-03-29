@@ -86,9 +86,9 @@ export const editMatchNotes = createAsyncThunk(
 
 export const getCoachNotes = createAsyncThunk(
   'match/getCoachNotes',
-  async (_, thunkApi) => {
+  async (coachId: string, thunkApi) => {
     try {
-      const getCoachNoteIds = await coachPlayerNotesPath(getUserId()).get();
+      const getCoachNoteIds = await coachPlayerNotesPath(coachId).get();
       const coachNoteIds = getCoachNoteIds.docs.map(x => x.id);
       const matches: MatchDetails[] = [];
       for (const id of coachNoteIds) {
