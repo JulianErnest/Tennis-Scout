@@ -53,10 +53,10 @@ const CoachDashboard = () => {
       <View style={styles.row}>
         <View style={styles.column}>
           <AppDashboardLink
-            navprops={{coachId: uid, type: 'create'}}
+            navprops={{}}
             icon={'edit'}
             label={'Enter Match Notes'}
-            route={'MatchNotes'}
+            route={'CreateNote'}
           />
         </View>
         <View style={styles.column}>

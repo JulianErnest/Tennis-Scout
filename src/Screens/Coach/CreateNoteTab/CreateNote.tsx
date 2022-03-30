@@ -114,16 +114,18 @@ const CreateNote = ({route}: any) => {
   useEffect(() => {
     if (route.params) {
       const {params} = route;
-      formRef.current.setFieldValue('useExistingPlayer', true);
-      formRef.current.setFieldValue('playerId', params.player.player_id);
-      formRef.current.setFieldValue(
-        'opponentLastName',
-        params.player.player_surname,
-      );
-      formRef.current.setFieldValue(
-        'opponentFirstName',
-        params.player.player_first_name,
-      );
+      if (params.player_id) {
+        formRef.current.setFieldValue('useExistingPlayer', true);
+        formRef.current.setFieldValue('playerId', params.player.player_id);
+        formRef.current.setFieldValue(
+          'opponentLastName',
+          params.player.player_surname,
+        );
+        formRef.current.setFieldValue(
+          'opponentFirstName',
+          params.player.player_first_name,
+        );
+      }
     }
   }, [route]);
 
