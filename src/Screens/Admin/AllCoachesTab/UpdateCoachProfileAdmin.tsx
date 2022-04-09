@@ -1,42 +1,33 @@
 import {StyleSheet, Text, ScrollView, View, SafeAreaView} from 'react-native';
 import {Button} from 'react-native-paper';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Formik} from 'formik';
-import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/Feather';
 
 import {Colors, GlobalStyles} from '../../../Styles/GlobalStyles';
-import {useAppDispatch, useAppSelector} from '../../../State/hooks';
+import {useAppDispatch} from '../../../State/hooks';
 import {
   AccountDetails,
-  resetAccount,
-  selectUserAccountDetails,
   updateAccount,
 } from '../../../State/Features/account/accountSlice';
 import AppDatePicker from '../../../Components/AppDatePicker';
 import AppErrorText from '../../../Components/AppErrorText';
 import AppInputLabel from '../../../Components/AppInputLabel';
 import AppRadioButton from '../../../Components/AppRadioButton';
-import {InitialValues} from '../../../State/Features/account/AccountConstants';
-import {
-  getLoggedInUser,
-  PreviousPlayers,
-  resetMe,
-} from '../../../State/Features/me/meSlice';
-import {resetApplications} from '../../../State/Features/applications/applicationsSlice';
-import {resetMatch} from '../../../State/Features/match/matchSlice';
-import {resetSearch} from '../../../State/Features/players/searchSlice';
-import {deleteUserType} from '../../../Helpers/StorageFunctions';
+import {PreviousPlayers} from '../../../State/Features/me/meSlice';
 import AppPreviousPlayersAccount from '../../../Components/AppPreviousPlayersAccount';
-import {removeCustomPlayersFromLocal} from '../../../State/Features/players/playersSlice';
 
-const UpdateAccount = ({route}: any) => {
+type UpdateCoachProfileAdminProps = {
+  route: {
+    params: {
+      profile: AccountDetails;
+    };
+  };
+};
+
+const UpdateCoachProfileAdmin = ({route}: UpdateCoachProfileAdminProps) => {
   const dispatch = useAppDispatch();
-  const accountDetails = useAppSelector(selectUserAccountDetails);
-  const [currPassword, setCurrPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [reauthSuccess, setReauthSuccess] = useState(false);
   const formRef = useRef<any>();
 
   function addPreviousPlayer(values: any, setValues: any) {
@@ -53,13 +44,11 @@ const UpdateAccount = ({route}: any) => {
   }
 
   useEffect(() => {
-    formRef.current.setValues(accountDetails);
-  }, [accountDetails]);
+    formRef.current.setValues(route.params.profile);
+  }, [route.params.profile]);
 
   async function handleUpdateAccount(values: AccountDetails) {
     const val = await dispatch(updateAccount(values)).unwrap();
-    dispatch(getLoggedInUser(auth().currentUser?.uid as string));
-    !route.params?.type && getLoggedInUser(values.uid as string);
     Toast.show({
       type: !val ? 'error' : 'success',
       text1: !val
@@ -70,113 +59,15 @@ const UpdateAccount = ({route}: any) => {
     });
   }
 
-  async function handleEnterCurrPassword() {
-    const emailCred = auth.EmailAuthProvider.credential(
-      accountDetails.email,
-      currPassword,
-    )
-    try {
-      await auth().currentUser?.reauthenticateWithCredential(emailCred);
-      setReauthSuccess(true);
-    } catch (e) {
-      console.log('Update account error', e);
-      Toast.show({
-        type: 'error',
-        text1: 'Password is invalid',
-        autoHide: true,
-        visibilityTime: 2000,
-      });
-    }
-  }
-
-  async function handleUpdatePassword() {
-    try {
-      await auth().currentUser?.updatePassword(newPassword);
-      Toast.show({
-        type: 'success',
-        text1: 'Successfully changed password',
-        autoHide: true,
-        visibilityTime: 2000,
-      });
-      setReauthSuccess(false);
-      setCurrPassword('');
-      setNewPassword('');
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async function logout() {
-    dispatch(resetApplications());
-    dispatch(resetAccount());
-    dispatch(resetMatch());
-    dispatch(resetMe());
-    dispatch(resetSearch());
-    try {
-      removeCustomPlayersFromLocal();
-      auth().signOut();
-      deleteUserType();
-    } catch (e) {
-      console.log('Error logging out', e);
-    }
-  }
-
   return (
     <SafeAreaView style={GlobalStyles.centerTopView}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
         style={styles.scrollView}>
-        <Icon name="log-out" style={styles.logoutIcon} onPress={logout} />
-        <Text style={styles.heading}>Account Info</Text>
-        <>
-          <Text style={styles.bigText}>Change password</Text>
-          <AppInputLabel
-            height={38}
-            labelColor="black"
-            label="Enter current password to begin"
-            value={currPassword}
-            onChange={t => setCurrPassword(t)}
-            placeholder=""
-            error={false}
-            hideText={true}
-            multiline={false}
-          />
-        </>
-        {!reauthSuccess && (
-          <Button
-            style={styles.button}
-            onPress={handleEnterCurrPassword}
-            mode="contained"
-            color="black">
-            Confirm
-          </Button>
-        )}
-        {reauthSuccess && (
-          <>
-            <AppInputLabel
-              height={38}
-              labelColor="black"
-              label="New Password"
-              value={newPassword}
-              onChange={t => setNewPassword(t)}
-              placeholder=""
-              error={false}
-              hideText={true}
-              multiline={false}
-            />
-            <Button
-              style={styles.button}
-              onPress={handleUpdatePassword}
-              mode="contained"
-              color="black">
-              Update Password
-            </Button>
-          </>
-        )}
         <Formik
           onSubmit={values => handleUpdateAccount(values)}
           innerRef={formRef as any}
-          initialValues={InitialValues}>
+          initialValues={route.params.profile}>
           {({
             values,
             handleSubmit,
@@ -187,12 +78,12 @@ const UpdateAccount = ({route}: any) => {
             setValues,
           }) => (
             <>
-              <Text style={styles.bigText}>My Info</Text>
+              <Text style={styles.bigText}>Coach Info</Text>
               <AppInputLabel
                 height={38}
                 labelColor="black"
                 label="Email"
-                value={accountDetails.email}
+                value={values.email}
                 onChange={() => null}
                 placeholder=""
                 error={errors.coachLastName !== ''}
@@ -211,7 +102,10 @@ const UpdateAccount = ({route}: any) => {
                 multiline={false}
               />
               {errors.coachFirstName && touched.coachFirstName && (
-                <AppErrorText color="black" error={errors.coachFirstName} />
+                <AppErrorText
+                  color="black"
+                  error={errors.coachFirstName as string}
+                />
               )}
               <AppInputLabel
                 height={38}
@@ -225,7 +119,10 @@ const UpdateAccount = ({route}: any) => {
                 multiline={false}
               />
               {errors.coachLastName && touched.coachLastName && (
-                <AppErrorText color="black" error={errors.coachLastName} />
+                <AppErrorText
+                  color="black"
+                  error={errors.coachLastName as string}
+                />
               )}
               <Text style={styles.bigText}>Current Player</Text>
               <AppInputLabel
@@ -240,7 +137,10 @@ const UpdateAccount = ({route}: any) => {
                 multiline={false}
               />
               {errors.currentFirstName && touched.currentFirstName && (
-                <AppErrorText color="black" error={errors.currentFirstName} />
+                <AppErrorText
+                  color="black"
+                  error={errors.currentFirstName as string}
+                />
               )}
               <AppInputLabel
                 height={38}
@@ -254,7 +154,10 @@ const UpdateAccount = ({route}: any) => {
                 multiline={false}
               />
               {errors.currentLastName && touched.currentLastName && (
-                <AppErrorText color="black" error={errors.currentLastName} />
+                <AppErrorText
+                  color="black"
+                  error={errors.currentLastName as string}
+                />
               )}
               <AppDatePicker
                 date={new Date(values.currentStartDate)}
@@ -287,7 +190,10 @@ const UpdateAccount = ({route}: any) => {
                 />
               </View>
               {errors.currentGender && touched.currentGender && (
-                <AppErrorText color="black" error={errors.currentGender} />
+                <AppErrorText
+                  color="black"
+                  error={errors.currentGender as string}
+                />
               )}
               <Text style={styles.bigText}>Previous Player/s</Text>
               {values.previousPlayers && (
@@ -321,7 +227,7 @@ const UpdateAccount = ({route}: any) => {
   );
 };
 
-export default UpdateAccount;
+export default UpdateCoachProfileAdmin;
 
 const styles = StyleSheet.create({
   bigText: {

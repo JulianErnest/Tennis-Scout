@@ -3,13 +3,11 @@ import db from '@react-native-firebase/firestore';
 import {PreviousPlayers} from '../me/meSlice';
 import {RootState} from '../../hooks';
 
-type UpdateAccountParams = AccountDetails & {coachId: string};
-
 export const updateAccount = createAsyncThunk(
   'accountSlice/update',
-  async (params: UpdateAccountParams) => {
+  async (params: AccountDetails) => {
     try {
-      await db().collection('Coaches').doc(params.coachId).update({
+      await db().collection('Coaches').doc(params.uid).update({
         email: params.email,
         coachFirstName: params.coachFirstName,
         coachLastName: params.coachLastName,
@@ -32,7 +30,7 @@ export const getUserDetails = createAsyncThunk(
   async (uid: string, thunkApi) => {
     try {
       const doc = await db().collection('Coaches').doc(uid).get();
-      return doc.data();
+      return {...doc.data(), uid};
     } catch (e) {
       console.log('Error getting account accountSlice', e);
       return thunkApi.rejectWithValue({err: 'Cant get user details'});
@@ -48,7 +46,7 @@ export type AccountDetails = {
   currentLastName: string;
   currentStartDate: number;
   currentGender: string;
-  uid?: string;
+  uid: string;
   previousPlayers: PreviousPlayers[];
 };
 
@@ -77,6 +75,7 @@ const accountSlice = createSlice({
   initialState,
   reducers: {
     setAccountDetails(state, {payload}) {
+      console.log('Set account details payload', payload);
       state.userAccountDetails = {
         email: payload.email,
         coachFirstName: payload.coachFirstName,
@@ -86,6 +85,7 @@ const accountSlice = createSlice({
         currentStartDate: payload.currentStartDate,
         currentGender: payload.currentGender,
         previousPlayers: payload.previousPlayers,
+        uid: payload.uid,
       };
     },
     setAllCoaches(state, action) {

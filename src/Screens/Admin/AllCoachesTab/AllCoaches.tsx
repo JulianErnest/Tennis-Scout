@@ -28,9 +28,8 @@ const AllCoaches = () => {
   }, [dispatch]);
 
   function handleProfilePress(profile: AccountDetails) {
-    console.log(profile);
     dispatch(setAccountDetails(profile));
-    navigate('CoachProfile', {type: 'admin'});
+    navigate('CoachProfile', {profile});
   }
 
   function handleNotePress(uid: string) {
