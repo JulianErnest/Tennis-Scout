@@ -424,12 +424,11 @@ const CreateNote = ({route}: any) => {
                   multiline={true}
                 />
                 <View style={styles.radioContainer}>
-                  <Text>
+                  <Text onPress={handleSubmit}>
                     <Icon
                       name="check-circle"
                       color={Colors.primary}
                       size={20}
-                      onPress={handleSubmit}
                     />
                     {'  '}
                     <Text style={styles.actions}>Create</Text>
