@@ -28,9 +28,10 @@ const AllMatches = () => {
           const matches: MatchDetails[] = [];
           snap &&
             snap.forEach(doc =>
-              matches.push(doc.data() as unknown as MatchDetails),
+              matches.push({...doc.data(), matchId: doc.id} as MatchDetails),
             );
           dispatch(setAdminMatches(matches));
+          console.log(matches);
         });
       return subscription;
     })();
