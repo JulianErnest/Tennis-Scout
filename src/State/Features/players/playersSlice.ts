@@ -140,16 +140,20 @@ export async function removeCustomPlayersFromLocal() {
 }
 
 // Create new rating entry
-export async function ratePlayer(params: FormValues) {
+export async function ratePlayer(params: FormValues, matchId: string) {
   try {
-    await playerRatingsPath.doc(params.playerId).collection('Ratings').add({
-      serve: params.serve.rating,
-      forehand: params.forehand.rating,
-      backhand: params.backhand.rating,
-      movement: params.movement.rating,
-      volleyAndNetPlay: params.volleysAndNetPlay.rating,
-      coachId: getUserId(),
-    });
+    await playerRatingsPath
+      .doc(params.playerId)
+      .collection('Ratings')
+      .doc(matchId)
+      .set({
+        serve: params.serve.rating,
+        forehand: params.forehand.rating,
+        backhand: params.backhand.rating,
+        movement: params.movement.rating,
+        volleyAndNetPlay: params.volleysAndNetPlay.rating,
+        coachId: getUserId(),
+      });
   } catch (e) {
     console.log('Error getting update player ratings', e);
   }

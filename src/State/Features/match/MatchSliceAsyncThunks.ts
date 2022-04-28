@@ -20,7 +20,7 @@ const playerRatingsPath = (playerId: string, matchId: string) =>
   db()
     .collection('Player_Rating')
     .doc(playerId)
-    .collection('Notes')
+    .collection('Ratings')
     .doc(matchId);
 
 export const submitMatchNotes = createAsyncThunk(
@@ -52,7 +52,7 @@ export const submitMatchNotes = createAsyncThunk(
             matchId: true,
           }),
         await addCoachNote(match.id),
-        await ratePlayer(params),
+        await ratePlayer(params, match.id),
       ]);
       return true;
     } catch (error) {
@@ -67,9 +67,13 @@ export const submitMatchNotes = createAsyncThunk(
 export const editMatchNotes = createAsyncThunk(
   'match/edit',
   async (params: MatchDetails, thunkApi) => {
+    console.log(params.playerId, params.matchId);
     try {
       await db().collection('Matches').doc(params.matchId).update(params);
-      await playerRatingsPath(params.playerId, params.matchId).update({
+      await playerRatingsPath(
+        params.playerId.toString(),
+        params.matchId,
+      ).update({
         serve: params.serve.rating,
         forehand: params.forehand.rating,
         backhand: params.backhand.rating,
