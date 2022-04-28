@@ -32,7 +32,7 @@ const AllNotes = ({route}: any) => {
           <Text style={styles.contentText}>
             vs {' ' + item.opponentLastName}
           </Text>
-          <Text style={styles.contentText}>
+          <Text numberOfLines={1} style={styles.contentText}>
             {item.tournamentName} {'  -  '}
             {getFormattedDate(new Date(item.tournamentDate))}
           </Text>

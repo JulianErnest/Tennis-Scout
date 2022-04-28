@@ -43,7 +43,7 @@ const CoachDashboard = () => {
               <Text style={styles.versusName}>
                 {`vs ${matchNotes[0].opponentLastName}`}
               </Text>
-              <Text style={styles.versusTournament}>
+              <Text numberOfLines={1} style={styles.versusTournament}>
                 {matchNotes[0].tournamentName ?? ''}
               </Text>
             </>
