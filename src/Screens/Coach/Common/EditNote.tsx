@@ -5,6 +5,7 @@ import AppInputLabel from '../../../Components/AppInputLabel';
 import {Formik} from 'formik';
 import Icon from 'react-native-vector-icons/Feather';
 import {ActivityIndicator} from 'react-native-paper';
+import {ADMIN} from '../../../secret';
 
 import {selectEnableScroll} from '../../../State/Features/match/matchSlice';
 import {useAppDispatch, useAppSelector} from '../../../State/hooks';
@@ -52,7 +53,6 @@ const EditNote = ({route}: any) => {
 
   async function handleSubmitForm(values: MatchDetails) {
     try {
-      // If it was not shareable before and is shareable now
       if (!route.params.isShareable && values.isShareable) {
         await deleteMatchFromPrivate(values.playerId, values.matchId);
         route.params.isShareable = true;
@@ -71,7 +71,10 @@ const EditNote = ({route}: any) => {
         visibilityTime: 3000,
         autoHide: true,
       });
-      dispatch(getCoachNotes(getUserId()));
+      const uid = getUserId();
+      if (uid !== ADMIN) {
+        await dispatch(getCoachNotes(getUserId()));
+      }
     } catch (e) {
       console.log('Error submitting form', e);
       setUploading(false);
@@ -339,12 +342,11 @@ const EditNote = ({route}: any) => {
                 />
                 {route.params.type !== 'cant-edit' && (
                   <View style={styles.actionContainer}>
-                    <Text>
+                    <Text onPress={handleSubmit}>
                       <Icon
                         name="check-circle"
                         color={Colors.primary}
                         size={20}
-                        onPress={handleSubmit}
                       />
                       {'  '}
                       <Text style={styles.actions}>Edit</Text>
