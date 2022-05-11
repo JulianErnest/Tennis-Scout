@@ -22,7 +22,7 @@ const App = () => {
 
   function handleUpdate() {
     if (Platform.OS === 'android') {
-      Linking.openURL('market://details?id=googoo.android.btgps');
+      Linking.openURL('market://details?id=com.ddsa.tennisscout');
     } else {
       const link =
         'itms-apps://itunes.apple.com/app/apple-store/id1612769870?mt=8';
@@ -40,6 +40,8 @@ const App = () => {
     const bootstrapAsync = async () => {
       const myV = checkDeviceVersion();
       const latestV = await checkLatestVersion();
+      console.log(myV, 'my version');
+      console.log(latestV, 'latest version');
       if (!latestV) {
         return;
       }
